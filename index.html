@@ -1,3 +1,4 @@
+<!-- 九龍 입주 등록 단말 — 구룡섹터 캐릭터 설정 생성기 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>九龍 입주 등록</title>
@@ -109,6 +110,8 @@
   .fac.on .fn{color:var(--neon)}
   .fac .fd{font-size:11px;color:var(--muted);margin-top:4px}
 
+
+
   .profileGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .profileGrid .full{grid-column:1/-1}
   @media(max-width:520px){.profileGrid{grid-template-columns:1fr}}
@@ -129,11 +132,844 @@
   .preview.issuing{min-height:260px;border-color:var(--neon);box-shadow:0 0 28px rgba(22,239,198,.18)}
   .issueFx{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;background:radial-gradient(80% 120% at 50% 30%,rgba(22,239,198,.12),rgba(8,11,10,.96));font-family:'Noto Sans Mono';letter-spacing:2px;color:var(--neon);text-align:center;z-index:2}
   .issueFx::before{content:"";position:absolute;inset:-40%;background:linear-gradient(180deg,transparent 0%,rgba(22,239,198,.12) 48%,rgba(22,239,198,.55) 50%,rgba(22,239,198,.12) 52%,transparent 100%);animation:scanIssue 1.55s linear infinite}
-  .issueFx::after{content:"九龍\A직印";position:absolute;right:54px;bottom:44px;width:150px;height:150px;display:flex;align-items:center;justify-content:center;text-align:center;white-space:pre;line-height:.82;border:5px solid rgba(255,43,70,.82);color:rgba(255,43,70,.9);padding:0;font-family:'Black Han Sans';font-size:60px;letter-spacing:0;transform:rotate(-9deg) scale(.7);opacity:0;animation:stampIssue .62s ease-out .9s forwards;z-index:6;text-shadow:0 0 9px rgba(255,43,70,.26)}
+  .issueFx::after{content:"九龍\A直印";position:absolute;right:54px;bottom:44px;width:150px;height:150px;display:flex;align-items:center;justify-content:center;text-align:center;white-space:pre;line-height:.82;border:5px solid rgba(255,43,70,.82);color:rgba(255,43,70,.9);padding:0;font-family:'Black Han Sans';font-size:60px;letter-spacing:0;transform:rotate(-9deg) scale(.7);opacity:0;animation:stampIssue .62s ease-out .9s forwards;z-index:6;text-shadow:0 0 9px rgba(255,43,70,.26)}
   .issueFx .txt{position:relative;z-index:1;font-weight:700;text-shadow:0 0 16px rgba(22,239,198,.55)}
   .issueFx .subtxt{display:block;margin-top:8px;font-size:10px;color:var(--muted);letter-spacing:1px}
   @keyframes scanIssue{from{transform:translateY(-35%)}to{transform:translateY(35%)}}
   @keyframes stampIssue{0%{opacity:0;transform:rotate(-9deg) scale(1.28)}55%{opacity:1;transform:rotate(-9deg) scale(.58)}100%{opacity:.98;transform:rotate(-9deg) scale(.7)}}
 
   /* 등록증 */
-  #cardSec{border-color:var(--neon);
+  #cardSec{border-color:var(--neon);box-shadow:0 0 30px rgba(22,239,198,.12)}
+  pre.cert{white-space:pre-wrap;word-break:break-word;font-family:'Noto Sans Mono';
+    font-size:13px;background:#0b100e;border:1px dashed var(--copper);padding:16px;
+    color:var(--ink);margin:0;line-height:1.7}
+  .cert .k{color:var(--copper)}
+  .foot{color:var(--muted);font-size:11px;text-align:center;margin-top:30px;
+    font-family:'Noto Sans Mono';letter-spacing:1px}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
+    background:var(--neon);color:#04110d;font-weight:700;padding:10px 18px;font-size:13px;
+    opacity:0;pointer-events:none;transition:.25s;z-index:20}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="kick">KOWLOON SECTOR · 不法 入住 登録</div>
+    <h1 class="han">九龍 <span class="red">입주 등록</span></h1>
+    <p class="sub">구룡섹터에 오신 걸 환영합니다 — <b>환불·퇴거 불가</b>.
+      아래 단말로 신원을 등록하면 크랙에 붙여넣을 시작 설정이 발급됩니다.
+      등록비 미납분은 추후 장기로 정산됩니다.</p>
+  </header>
+
+  <!-- ① 신원 -->
+  <section id="s0">
+    <div class="step"><span class="num">壹</span>
+      <h2>身元 <span class="ko">/ 등록증에 박힐 기본정보</span></h2></div>
+    <div class="profileGrid">
+      <div>
+        <label class="fld">이름 / 별칭</label>
+        <input type="text" id="nameIn" placeholder="예) 윤서 / 하운 / 17번" oninput="updateProfile()" onchange="updateProfile()">
+      </div>
+      <div>
+        <label class="fld">키</label>
+        <input type="text" id="heightIn" placeholder="예) 168cm / 180cm" oninput="updateProfile()" onchange="updateProfile()">
+      </div>
+      <div class="full">
+        <label class="fld">신체특징</label>
+        <input type="text" id="featureIn" placeholder="예) 왼쪽 눈 아래 흉터, 낡은 의체팔, 붉은 각성흔" oninput="updateProfile()" onchange="updateProfile()" onkeydown="if(event.key==='Enter'){updateProfile(true)}">
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn" onclick="updateProfile(true)">신원 등록하고 진행</button>
+    </div>
+    <div class="miniNote">※ 실명 아니어도 됩니다. 구룡에서 중요한 건 이름보다 외상값과 도망 속도입니다.</div>
+  </section>
+
+  <!-- ② 출신 -->
+  <section id="s1" class="locked">
+    <div class="step"><span class="num">貳</span>
+      <h2>출신 <span class="ko">/ 어떻게 굴러들어왔나</span></h2></div>
+    <div class="picks">
+      <div class="pick" data-origin="megacity" onclick="pickOrigin(this)">
+        <div class="tag">EXILE · 外部人</div>
+        <div class="t">메가시티 탈주자</div>
+        <div class="d">위층 세상에서 도망쳐 왔다. 통신도 돈도 안 통하는 이 블랙박스가 처음이라 모든 게 막막하다.</div>
+      </div>
+      <div class="pick" data-origin="local" onclick="pickOrigin(this)">
+        <div class="tag">NATIVE · 土박이</div>
+        <div class="t">만두집 단골 토박이</div>
+        <div class="d">구룡에서 나고 자랐다. 메이링 만두 없인 못 사는 단골. 생존 노하우와 외상값이 둘 다 두둑하다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② 이능력 -->
+  <section id="s2" class="locked">
+    <div class="step"><span class="num">參</span>
+      <h2>異能 <span class="ko">/ 몸에 깃든 오염</span></h2></div>
+    <label class="fld">원하는 능력을 적으면, 단말이 구룡식으로 보정해 <b style="color:var(--amber)">반작용(罰)</b>까지 뽑아냅니다.</label>
+    <textarea id="powerIn" placeholder="예) 불을 다룬다 / 시간을 잠깐 멈춘다 / 남의 기억을 읽는다 …"></textarea>
+    <div class="row">
+      <button class="btn" id="refineBtn" onclick="refinePower()">구룡식으로 보정</button>
+      <button class="ghost" onclick="randomPower()">아무거나 굴리기</button>
+      <button class="ghost" onclick="noPower()">난 무능력자다</button>
+    </div>
+    <div id="powerOut"></div>
+  </section>
+
+  <!-- ③ 과거 -->
+  <section id="s3" class="locked">
+    <div class="step"><span class="num">肆</span>
+      <h2>過去 <span class="ko">/ 한 줄짜리 사연</span></h2></div>
+    <input type="text" id="pastIn" placeholder="한 줄 과거를 직접 적으면 다음 단계가 열립니다. 또는 [굴리기]" oninput="updatePast()" onchange="updatePast()" onblur="updatePast()" onkeydown="if(event.key==='Enter'){updatePast(true)}">
+    <div class="row">
+      <button class="ghost" onclick="rollPast()">과거 굴리고 진행</button>
+      <button class="btn" onclick="updatePast(true)">직접 입력 완료</button>
+    </div>
+  </section>
+
+  <!-- ④ 세력 -->
+  <section id="s4" class="locked">
+    <div class="step"><span class="num">伍</span>
+      <h2>勢力 <span class="ko">/ 어느 줄에 설 텐가</span></h2></div>
+    <div class="facs" id="facList"></div>
+  </section>
+
+  <!-- ⑤ 세력 내 위치 -->
+  <section id="s5" class="locked">
+    <div class="step"><span class="num">陸</span>
+      <h2>位置 <span class="ko">/ 그 줄 안에서의 자리</span></h2></div>
+    <div class="facs" id="posList"></div>
+  </section>
+
+  <!-- ⑦ 최초 보유 W -->
+  <section id="s6" class="locked">
+    <div class="step"><span class="num">柒</span>
+      <h2>所持金 <span class="ko">/ 최초 보유 와트칩</span></h2></div>
+    <label class="fld">구룡의 돈은 전자화폐가 아니라 손가락마디 크기 불법충전 배터리칩입니다. 시작 소지금을 굴리세요.</label>
+    <div class="row">
+      <button class="btn" onclick="rollWatts()">최초 보유 W 굴리기</button>
+      <button class="ghost" onclick="manualWatts()">직접 적기</button>
+    </div>
+    <div id="wOut" class="wbox">
+      <div class="wbig">미등록</div>
+      <div class="wdesc">1W≈배양만두 1개 / 의체충전 1회 / 관짝방 하루. 메가크레딧은 구룡에서 죽은 돈입니다.</div>
+      <div class="wsub">짝퉁칩·빈칩·물 채운 가짜칩 주의. 믿을 건 삼합회 인증각인뿐이라는 더러운 농담이 있습니다.</div>
+    </div>
+  </section>
+
+  <!-- 등록증 -->
+  <section id="cardSec" class="locked">
+    <div class="step"><span class="num">證</span>
+      <h2>登録證 <span class="ko">/ 크랙에 붙여넣기</span></h2></div>
+    <label class="fld">아래 칸은 직접 수정 가능합니다. 마음에 안 드는 문장은 크랙에 붙여넣기 전에 여기서 바꾸세요.</label>
+    <textarea class="certEdit" id="cert" oninput="STATE.certTouched=true"></textarea>
+    <div class="row">
+      <button class="btn" onclick="copyCert()">등록증 복사</button>
+      <button class="ghost" onclick="resetCertToGenerated()">자동 설정으로 되돌리기</button>
+      <button class="ghost" onclick="location.reload()">처음부터 다시</button>
+    </div>
+    <div class="idTools">
+      <div class="step" style="margin-bottom:8px"><span class="num">ID</span>
+        <h2>臨時住民證 <span class="ko">/ 이미지 등록증</span></h2></div>
+      <label class="fld">프로필 사진을 넣으면 주민등록증 느낌의 구룡 임시입주증 PNG를 만들 수 있습니다.</label>
+      <div class="fileline">
+        <input type="file" id="photoIn" accept="image/*" onchange="loadProfilePhoto(event)">
+        <button class="ghost" onclick="clearProfilePhoto()">사진 제거</button>
+      </div>
+      <div class="row">
+        <button class="btn" onclick="issueIdCard()">등록증 출력</button>
+        <button class="ghost" onclick="downloadIdCard()">PNG 다운로드</button>
+      </div>
+      <canvas id="idCanvas" width="1000" height="620" style="display:none"></canvas>
+      <div class="preview" id="idPreview">프로필 사진 선택 후 [등록증 출력]을 누르세요. 사진 없이도 발급됩니다.</div>
+    </div>
+  </section>
+
+  <div class="foot">九龍 SECTOR REGISTRY v7 · 출력물은 본인 책임 · 도망자에게 행운을</div>
+</div>
+<div class="toast" id="toast">복사됨 — 크랙 시작 설정에 붙여넣으세요</div>
+
+<script>
+const STATE={name:null,height:null,features:null,origin:null,power:null,backlash:null,past:null,faction:null,factionId:null,position:null,watts:null,photoData:null,certTouched:false,lastGeneratedCert:"",serial:null};
+STATE.serial='KOW-'+Math.random().toString(36).slice(2,7).toUpperCase()+'-'+String(Math.floor(Math.random()*9000)+1000)+'-'+String(Math.floor(Math.random()*9000)+1000);
+
+const ORIGIN_LABEL={megacity:"메가시티 탈주자",local:"만두집 단골 토박이"};
+
+const FACTIONS={
+  megacity:[
+    {id:"none",fn:"무소속 떠돌이",fd:"줄 안 서고 혼자 버틴다. 가장 자유롭고 가장 위험.",rec:true,hard:false},
+    {id:"union",fn:"이능력 연합",fd:"능력자라면 마더의 품으로. 단, 광신은 덤.",rec:true,hard:false},
+    {id:"triad",fn:"사이버삼합회",fd:"돈이 곧 줄. 말단부터 굴러야 한다.",rec:false,hard:true},
+    {id:"spook",fn:"국가 특무국 파견조",fd:"구룡에 숨어든 특무국 말단. 잠입요원 감시와 현장 잡무가 임무.",rec:false,hard:true}
+  ],
+  local:[
+    {id:"market",fn:"중립 시장 식구",fd:"메이링·린·진 라인. 단골빨로 산다.",rec:true,hard:false},
+    {id:"none",fn:"무소속 생활꾼",fd:"배달·고철로 그날그날 W를 번다.",rec:true,hard:false},
+    {id:"triad",fn:"삼합회 말단",fd:"도박장·수금 잔심부름. 빚지면 끝.",rec:false,hard:true},
+    {id:"union",fn:"연합 동조자",fd:"숨은 능력자라면 5구역에 연줄이.",rec:false,hard:true},
+    {id:"spook",fn:"국가 특무국 파견조",fd:"구룡 현지인처럼 위장한 특무국 끄나풀. 임무보다 민원이 더 많다.",rec:false,hard:true}
+  ]
+};
+
+const POSITIONS={
+  none:[
+    {name:"떠돌이(뉴비)",desc:"구룡 룰을 거의 모르는 신규 생존자. 통행세·시세·골목 암호를 매번 몸값으로 배운다.",rec:true,hard:false},
+    {name:"귀환자",desc:"구룡에 살다 밖으로 나갔고, 결국 다시 돌아왔다. 오래된 인맥과 묵은 원한이 같이 깨어난다.",rec:true,hard:true},
+    {name:"고철잡부",desc:"배달·수리·고물 수거로 하루 W를 번다. 구역 지리는 빠삭하지만 뒷배는 없다.",rec:false,hard:false},
+    {name:"임시숙박자",desc:"오늘은 관짝방, 내일은 계단참. 주소가 자주 바뀌어 추적은 어렵지만 본인도 길을 잃는다.",rec:false,hard:true}
+  ],
+  market:[
+    {name:"만두집 단골",desc:"메이링 가게에서 얼굴이 통한다. 외상값이 신분증이고, 만두 냄새가 호출벨이다.",rec:true,hard:false},
+    {name:"야매약국 심부름꾼",desc:"린의 약재·곰방대 부품·수상한 봉투를 배달한다. 내용물은 묻지 않는 게 오래 산다.",rec:false,hard:false},
+    {name:"불법치과 외상환자",desc:"진에게 치료를 받았거나 빚을 졌다. 몸 어딘가가 담보로 예약되어 있을 수 있다.",rec:false,hard:true},
+    {name:"시장 골목 해결사",desc:"분실품·외상·작은 싸움을 중재한다. 큰일은 못 막아도 큰 욕은 대신 먹는다.",rec:true,hard:false}
+  ],
+  union:[
+    {name:"보호관찰 신입",desc:"연합에 막 흘러든 능력자. 마더의 보호와 감시를 동시에 받는다.",rec:true,hard:false},
+    {name:"전당포 잡일꾼",desc:"혁의 전당포에서 물건값·몸값·수면시간 사이를 계산한다. 사장은 자주 잔다.",rec:true,hard:false},
+    {name:"넷러너 보조",desc:"샤오민의 케이블·라우터·간식을 챙긴다. 온라인에선 쎄지만 현실에선 심부름이 많다.",rec:false,hard:false},
+    {name:"마더의 선전병",desc:"세인트엘모 방송과 폐모니터 제단을 관리한다. 신앙심보다 멀티탭이 더 중요하다.",rec:false,hard:true}
+  ],
+  triad:[
+    {name:"수금 심부름꾼",desc:"통행세·전기세·보호비를 걷는다. 못 걷으면 자기 월급에서 빠진다.",rec:true,hard:false},
+    {name:"도박장 객식구",desc:"아강 주변에서 판돈과 사고를 같이 줍는다. 운보다 도망치는 발이 중요하다.",rec:false,hard:true},
+    {name:"전력선 하청",desc:"삼합회 전력망의 말단 관리. 감전과 욕설을 월급보다 자주 받는다.",rec:false,hard:true},
+    {name:"행동대 견습",desc:"율 밑에서 골목 군기를 배운다. 낮엔 심부름, 밤엔 그림자 뒤치다꺼리.",rec:true,hard:true}
+  ],
+  spook:[
+    {name:"흥신소 직원",desc:"건의 3구역 시장 모퉁이 『찾아드림』에서 접수·미행·잔심부름을 맡는다. 사장은 너무 정중해서 더 수상하다.",rec:true,hard:false},
+    {name:"신규 감찰요원",desc:"특무국이 나태한 잠입요원들을 감시하라고 새로 밀어 넣은 현장 요원. 감시 대상보다 서류가 더 안 움직인다.",rec:true,hard:true},
+    {name:"민원대행소 보조",desc:"미스터관의 『만물 민원·통행 대행소』에서 통행증·서류·분쟁 기록을 만진다. 본업은 첩보인데 실무는 민원 창구다.",rec:false,hard:false},
+    {name:"샘플회수 신입",desc:"특이 능력자 샘플과 실험 흔적을 회수하라는 임무를 받았다. 구룡에서는 회수품보다 본인 장기가 먼저 담보 잡힌다.",rec:false,hard:true}
+  ]
+};
+
+const PAST={
+  megacity:[
+    "실험체 번호로만 불리다 환풍구로 기어 나왔다.",
+    "각성 첫날 회사 빌딩을 반쯤 태우고 수배됐다.",
+    "위층 사람들이 다 죽고 혼자 살아남아 도망쳤다.",
+    "메가크레딧 빚 떼먹고 야반도주, 여기선 그 돈도 안 통한다.",
+    "추적자를 피해 노이즈 장벽 안으로 몸을 던졌다.",
+    "기억 절반이 지워진 채 구룡 입구에 버려져 있었다."
+  ],
+  local:[
+    "메이링 만두 없으면 하루를 못 사는 8년 차 단골.",
+    "관짝방에서 나고 자라 하늘이란 걸 본 적이 없다.",
+    "배달로 길을 다 외워 머릿속에 구룡 지도가 있다.",
+    "외상 만두값이 어느새 300개를 넘겼다.",
+    "고철 줍다 주운 의체로 한쪽 팔을 갈아 끼웠다.",
+    "충전 페달만 5년, 허벅지가 발전기다."
+  ]
+};
+
+const RANDOM_POWERS=["불을 다룬다","아주 잠깐 시간을 멈춘다","남의 기억을 읽는다","쇠를 휘게 한다",
+  "그림자에 숨는다","상처를 빨리 아물게 한다","소리를 지운다","전자기기를 손으로 멈춘다",
+  "벽을 통과한다","남의 통증을 가져온다","물을 끌어모은다","거짓말을 냄새로 안다"];
+
+const NON_POWER_RULES=[
+  {name:"구라협상",desc:"능력은 없지만 말빨로 통행세와 목숨값을 깎는다",backlash:"상대가 안 넘어가면 두 배로 맞거나 두 배로 낸다"},
+  {name:"골목눈치",desc:"표정·발소리·가격표 뒤의 살기를 재빨리 읽는다",backlash:"과신하면 CCTV보다 먼저 사기당한다"},
+  {name:"장부암기",desc:"빚·외상·통행세 숫자를 미친 듯이 기억한다",backlash:"숫자 하나 틀리면 구룡식 회계감사가 온다"},
+  {name:"고철장비",desc:"중고 EMP 스틱과 깡통무전기로 작은 틈을 만든다",backlash:"배터리 떨어지면 그냥 무거운 쓰레기다"},
+  {name:"불법드론",desc:"손바닥 드론 하나로 정찰·녹화·소액배달을 한다",backlash:"노이즈 심하면 주인 머리 위에서 자폭한다"},
+  {name:"충격장갑",desc:"낡은 전기장갑으로 가까운 적을 찌릿하게 물린다",backlash:"비 오는 날엔 본인이 더 많이 감전된다"},
+  {name:"가짜신분칩",desc:"싸구려 신분칩으로 검문 단말을 잠깐 속인다",backlash:"칩이 삑나면 이름이 '체납자'로 출력된다"},
+  {name:"만능공구",desc:"녹슨 멀티툴로 자물쇠·배관·의체나사를 억지로 건드린다",backlash:"절반은 고치고 절반은 더 망가뜨린다"}
+];
+
+const W_SHELLS=["고철나사 한 줌", "녹슨 의체관절", "끊어진 구리전선 30cm", "삼합회 각인 없는 빈칩 2개", "부러진 전자부적", "배양만두 쿠폰 반쪽", "깡통무전기 배터리", "린 약봉투 하나", "수상한 영수증 뭉치"];
+const W_NOTES=[
+  "삼합회 인증각인은 절반뿐이라 환전상이 표정을 구길 예정.",
+  "추위나 누전 때 방전될 수 있어 주머니 안쪽에 숨겨야 한다.",
+  "빈칩이 섞였는지 혀로 핥아 확인하면 하루가 조금 더 비참해진다.",
+  "메가크레딧은 외부망이 죽어 장식품보다 못하다.",
+  "빚쟁이 앞에서 흔들면 소지금이 아니라 장기 담보 견적서가 된다."
+];
+
+function updateProfile(force=false){
+  const name=document.getElementById('nameIn').value.trim();
+  const height=document.getElementById('heightIn').value.trim();
+  const features=document.getElementById('featureIn').value.trim();
+  STATE.name=name; STATE.height=height; STATE.features=features;
+  if(name && height && features){
+    unlock('s1'); refresh();
+    if(force) document.getElementById('s1').scrollIntoView({behavior:'smooth',block:'start'});
+    return true;
+  }
+  if(force){
+    alert('이름, 키, 신체특징을 모두 입력해주세요.');
+    if(!name) document.getElementById('nameIn').focus();
+    else if(!height) document.getElementById('heightIn').focus();
+    else document.getElementById('featureIn').focus();
+  }
+  refresh(); return false;
+}
+
+function pickOrigin(el){
+  document.querySelectorAll('.pick').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  STATE.origin=el.dataset.origin;
+  STATE.faction=null; STATE.factionId=null; STATE.position=null; STATE.watts=null;
+  document.getElementById('posList').innerHTML='';
+  document.getElementById('wOut').innerHTML='<div class="wbig">미등록</div><div class="wdesc">1W≈배양만두 1개 / 의체충전 1회 / 관짝방 하루. 메가크레딧은 구룡에서 죽은 돈입니다.</div><div class="wsub">짝퉁칩·빈칩·물 채운 가짜칩 주의. 믿을 건 삼합회 인증각인뿐이라는 더러운 농담이 있습니다.</div>';
+  lock('s5'); lock('s6'); lock('cardSec');
+  unlock('s2'); buildFactions();
+  // 과거 placeholder 갱신
+  document.getElementById('pastIn').placeholder =
+    STATE.origin==='megacity' ? "예) 각성 첫날 빌딩을 반쯤 태웠다…" : "예) 메이링 만두 8년 단골…";
+  refresh();
+}
+
+function unlock(id){const s=document.getElementById(id);if(s)s.classList.remove('locked');}
+function lock(id){const s=document.getElementById(id);if(s)s.classList.add('locked');}
+
+function makeBadges(item,recText){
+  const badges=[];
+  if(item.rec) badges.push(`<span class="badge rec">▸ 추천 ${recText}</span>`);
+  if(item.hard) badges.push(`<span class="badge hard">HARD</span>`);
+  return `<div class="badgeRow">${badges.join('')}</div>`;
+}
+
+function buildFactions(){
+  const list=FACTIONS[STATE.origin]; const box=document.getElementById('facList'); box.innerHTML='';
+  list.forEach(f=>{
+    const d=document.createElement('div'); d.className='fac'; d.onclick=()=>pickFaction(d,f);
+    d.innerHTML=`${makeBadges(f,'ROUTE')}<div class="fn">${f.fn}</div><div class="fd">${f.fd}</div>`;
+    box.appendChild(d);
+  });
+}
+function pickFaction(el,f){
+  document.querySelectorAll('#facList .fac').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  STATE.faction=f.fn; STATE.factionId=f.id; STATE.position=null; STATE.watts=null;
+  lock('s6'); lock('cardSec'); buildPositions(f.id); unlock('s5'); refresh();
+  document.getElementById('s5').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function buildPositions(factionId){
+  const list=POSITIONS[factionId]||POSITIONS.none; const box=document.getElementById('posList'); box.innerHTML='';
+  list.forEach(pos=>{
+    const d=document.createElement('div'); d.className='fac'; d.onclick=()=>pickPosition(d,pos);
+    d.innerHTML=`${makeBadges(pos,'POSITION')}<div class="fn">${pos.name}</div><div class="fd">${pos.desc}</div>`;
+    box.appendChild(d);
+  });
+}
+function pickPosition(el,pos){
+  document.querySelectorAll('#posList .fac').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  STATE.position=`${pos.name} — ${pos.desc}`;
+  STATE.watts=null; unlock('s6'); lock('cardSec'); refresh();
+  document.getElementById('s6').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function computeWatts(){
+  let min=1, max=6;
+  if(STATE.origin==='megacity'){min=0; max=5;}
+  if(STATE.origin==='local'){min=2; max=9;}
+  if(STATE.factionId==='triad'){min+=3; max+=8;}
+  if(STATE.factionId==='union'){min+=1; max+=4;}
+  if(STATE.factionId==='spook'){min+=0; max+=3;}
+  if((STATE.position||'').includes('떠돌이')){min=Math.max(0,min-1); max=Math.max(min+2,max-2);}
+  if((STATE.position||'').includes('귀환자')){min+=2; max+=5;}
+  if((STATE.position||'').includes('외상환자')){min=0; max=Math.max(2,max-4);}
+  if((STATE.position||'').includes('수금')){min+=2; max+=5;}
+  return Math.floor(Math.random()*(max-min+1))+min;
+}
+function rollWatts(){
+  const w=computeWatts();
+  const bundles=Math.floor(w/5), single=w%5;
+  const chipText=(w===0)?'0W · 빈칩만 몇 개 굴러다님':`${w}W · ${bundles?`다발 ${bundles}개`:''}${bundles&&single?' + ':''}${single?`1W칩 ${single}개`:''}`;
+  const shell=pick(W_SHELLS);
+  const note=pick(W_NOTES);
+  STATE.watts=`${w}W/S:${shell}`;
+  document.getElementById('wOut').innerHTML=`<div class="wbig">${esc(chipText)}</div><div class="wdesc">S:${esc(shell)}</div><div class="wsub">복사용 설정에는 ${esc(STATE.watts)} 형식으로 짧게 들어갑니다.</div>`;
+  unlock('cardSec'); refresh();
+  document.getElementById('cardSec').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function manualWatts(){
+  const v=prompt('최초 보유 W와 쉘을 짧게 적어주세요. 예) 3W/S:녹슨 의체관절');
+  if(!v||!v.trim()) return;
+  STATE.watts=v.trim();
+  document.getElementById('wOut').innerHTML=`<div class="wbig">직접 등록</div><div class="wdesc">${esc(STATE.watts)}</div><div class="wsub">복사용 설정에 짧게 들어갑니다.</div>`;
+  unlock('cardSec'); refresh();
+  document.getElementById('cardSec').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function rollPast(){
+  const arr=PAST[STATE.origin]||PAST.local;
+  const v=arr[Math.floor(Math.random()*arr.length)];
+  document.getElementById('pastIn').value=v;
+  STATE.past=v;
+  unlock('s4');
+  refresh();
+  document.getElementById('s4').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function randomPower(){
+  document.getElementById('powerIn').value=RANDOM_POWERS[Math.floor(Math.random()*RANDOM_POWERS.length)];
+  refinePower();
+}
+function noPower(){
+  const obj=pick(NON_POWER_RULES);
+  STATE.power=`무능력자/${obj.name} — ${obj.desc}`;
+  STATE.backlash=obj.backlash;
+  document.getElementById('powerOut').innerHTML=
+    `<div class="out"><div class="bar"><span>非能 LOCAL</span><span>생존기 등록</span></div>
+     <div class="body"><div class="pname">${esc(obj.name)}</div>
+     <div class="pdesc">${esc(obj.desc)}</div>
+     <div class="penalty"><div class="lab">弱點 · 대가</div>
+     <div class="txt">${esc(obj.backlash)}</div></div></div></div>`;
+  unlock('s3'); refresh();
+}
+
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+const POWER_RULES=[
+  {keys:["불","화염","열","폭발","태운","태우","fire"],names:["열화폐", "폐열점화", "적린발화"],verbs:["손끝의 체온을 녹슨 배관 열처럼 끌어올려 태운다","네온빛 붉은 불씨를 공업용 가스 냄새와 함께 튀긴다"],backs:["쓸수록 폐가 뜨거워져 검은 기침이 난다","주변 플라스틱이 먼저 녹아 본인 신발부터 망한다"]},
+  {keys:["시간","멈","느리","미래","과거","time"],names:["초침절단", "잔초정지", "시간삑살"],verbs:["눈앞의 1~3초만 불량 CCTV처럼 끊어 멈춘다","짧은 순간 주변 동작을 버퍼링 걸린 화면처럼 굳힌다"],backs:["멈춘 초만큼 심장이 뒤늦게 몰아쳐 코피가 난다","사용 후 기억 몇 초가 영수증 잉크처럼 날아간다"]},
+  {keys:["기억","생각","마음","정신","꿈","mind","memory"],names:["기억절취", "잡념도청", "몽상침입"],verbs:["상대 기억의 가장 시끄러운 조각만 해적 주파수처럼 훔쳐 듣는다","접촉한 사람의 최근 감정을 곰팡이 낀 필름처럼 읽는다"],backs:["남의 기억 냄새가 혀에 들러붙어 구역질이 난다","읽은 감정이 본인 꿈에 불법광고처럼 재생된다"]},
+  {keys:["쇠","금속","철","자석","기계","의체","metal"],names:["고철굴절", "자철쥐기", "녹슨자장"],verbs:["낡은 금속만 손바닥 쪽으로 휘게 만든다","의체 나사와 고철판을 짧게 잡아당기거나 밀어낸다"],backs:["쓸 때마다 충치와 의체 나사가 같이 울린다","주변 싸구려 단말이 먹통 되고 욕은 본인이 먹는다"]},
+  {keys:["그림자","어둠","숨","밤","shadow"],names:["먹그림자", "암막잠복", "그늘접힘"],verbs:["불량 네온 아래 생긴 그림자 틈에 몸을 납작하게 숨긴다","자기 그림자를 얇은 방수포처럼 펴 시야를 가린다"],backs:["강한 조명에 닿으면 편두통과 헛구역질이 온다","그림자가 늦게 따라와 지나가던 애들이 놀린다"]},
+  {keys:["치유","회복","상처","재생","피","heal"],names:["살점재봉", "혈육땜질", "상처반품"],verbs:["상처를 빠르게 아물게 하지만 흉터가 조잡한 박음질처럼 남는다","피와 신경을 억지로 당겨 임시로 봉합한다"],backs:["치료한 통증의 절반을 새벽에 몰아서 갚는다","배고픔이 폭주해 3D프린트 만두 냄새에도 침이 돈다"]},
+  {keys:["소리","음파","목소리","침묵","sound"],names:["소음절식", "무음도려", "주파수먹"],verbs:["주변 소리를 씹어 삼켜 짧은 무음지대를 만든다","특정 소리만 불법 라디오 잡음처럼 잘라낸다"],backs:["사용 후 귀에서 변기 물 내리는 환청이 돈다","삼킨 소리가 트림처럼 튀어나와 잠복을 망친다"]},
+  {keys:["전기","전자","EMP","해킹","기기","번개","electric"],names:["노이즈촉", "전선저주", "스파크침"],verbs:["손끝에서 전자기 노이즈를 뿜어 낡은 기계를 교란한다","불법 라우터와 깡통무전기를 잠깐 과열시킨다"],backs:["손톱 밑에서 스파크가 튀고 머리카락이 탄다","근처 냉장고가 꺼져 시장 상인들이 쫓아온다"]},
+  {keys:["벽","통과","투과","문","phase"],names:["벽지통과", "콘크리숨", "반쪽투과"],verbs:["얇은 벽과 문을 몸 한 겹씩 밀어 통과한다","콘크리트 틈으로 몸을 불량 압축파일처럼 우겨 넣는다"],backs:["통과 후 속이 뒤집혀 철가루 맛을 토한다","가끔 소매나 신발이 벽 안에 남아 체면이 죽는다"]},
+  {keys:["통증","고통","아픔","pain"],names:["통증수금", "아픔전가", "신경채권"],verbs:["상대 통증을 빚처럼 가져오거나 되돌려 보낸다","맞은 충격의 일부를 신경 영수증처럼 저장한다"],backs:["저장한 통증이 연체료 붙어 밤에 터진다","과다 사용 시 웃다가 울다가를 반복한다"]},
+  {keys:["물","비","수분","피부","water"],names:["누수소환", "습기채굴", "물때손"],verbs:["구룡의 누수와 습기를 손안으로 끌어모은다","벽 곰팡이 속 수분까지 짜내 작은 물줄기를 만든다"],backs:["몸이 축축해져 하루 종일 곰팡이 냄새가 난다","근처 배관이 삐져서 엉뚱한 방 천장이 샌다"]},
+  {keys:["거짓","진실","냄새","탐지","lie"],names:["구라후각", "진실비린", "허언탐지"],verbs:["거짓말을 싸구려 화학향처럼 맡아낸다","상대 말의 비린내로 허세와 진담을 구분한다"],backs:["진짜 악취와 거짓 냄새를 구분 못해 시장에서 무력화된다","많이 맡으면 본인 입에서도 구라 냄새가 난다"]}
+];
+
+const GENERIC_NAMES=["오염발현","신경공명","잡음각성","폐회로능","불량기적","육체오류"];
+const GENERIC_VERBS=[
+  "원하는 현상을 아주 좁은 범위에서 불량 전자부적처럼 비튼다",
+  "신체 오염을 짧게 끌어올려 주변 현실에 억지 오류를 낸다",
+  "녹슨 의체와 네온 노이즈 사이로 능력을 불안정하게 방출한다"
+];
+const GENERIC_BACKS=[
+  "사용 후 코피·이명·헛구역질 중 하나가 랜덤 청구된다",
+  "주변 깡통무전기가 울고 본인은 하루치 기력이 빠진다",
+  "능력이 끝나면 손끝에서 탄 전선 냄새가 빠지지 않는다"
+];
+
+function localRefinePower(input){
+  const raw=input.toLowerCase();
+  const rule=POWER_RULES.find(r=>r.keys.some(k=>raw.includes(k.toLowerCase())));
+  const name=pick(rule?rule.names:GENERIC_NAMES);
+  const verb=pick(rule?rule.verbs:GENERIC_VERBS);
+  const back=pick(rule?rule.backs:GENERIC_BACKS);
+  return {
+    name,
+    // 출신을 실험실·제어흔으로 고정하지 않기 위해 능력 설명에는 출신 문구를 붙이지 않는다.
+    desc:verb,
+    backlash:back
+  };
+}
+
+function refinePower(){
+  const input=document.getElementById('powerIn').value.trim();
+  const out=document.getElementById('powerOut');
+  if(!input){out.innerHTML='<div class="err">능력을 먼저 적으세요. 빈칸은 무능력자 버튼으로.</div>';return;}
+  const btn=document.getElementById('refineBtn'); btn.disabled=true;
+  out.innerHTML='<div class="out"><div class="loading">단말이 신체 오염도를 측정 중<span class="blip"> ▮▮▮▮</span></div></div>';
+
+  setTimeout(()=>{
+    const obj=localRefinePower(input);
+    STATE.power=`${obj.name} — ${obj.desc}`;
+    STATE.backlash=obj.backlash;
+    out.innerHTML=
+      `<div class="out"><div class="bar"><span>異能 LOCAL</span><span>오프라인 오염 등록</span></div>
+       <div class="body"><div class="pname">${esc(obj.name)}</div>
+       <div class="pdesc">${esc(obj.desc)}</div>
+       <div class="penalty"><div class="lab">罰 · 반작용</div>
+       <div class="txt">${esc(obj.backlash)}</div></div></div></div>`;
+    unlock('s3'); refresh(); btn.disabled=false;
+  }, 450);
+}
+
+
+
+// ==========================================================================
+// [신체 파괴형] 조합식 이능력 생성 시스템 데이터 풀
+// - 기존 버튼/출력 구조에 맞춰 오프라인 랜덤 생성으로 연결
+// ==========================================================================
+const KOWLOON_POWER_TYPES = [
+  { type: "신경회로 과부하형", suffix: "오버클록" },
+  { type: "혈류 가속 폭제형", suffix: "서지" },
+  { type: "분자 위상 붕괴형", suffix: "인젝션" },
+  { type: "생체 전류 역류형", suffix: "인버전" },
+  { type: "세포 피로 분열형", suffix: "포매팅" }
+];
+
+const KOWLOON_POWER_EFFECTS = [
+  { name: "염동적 공간 압착", desc: "시선이 닿는 반경 1m의 공기 밀도를 순간적으로 압착하여 고체 수준의 투명한 물리 격벽을 형성합니다. 탄환을 튕겨내기에 제격입니다." },
+  { name: "생체 전자기 교란", desc: "자신을 중심으로 강력한 생체 EMP 전류를 방출하여 주변 하층민들의 불법 의체 센서와 통신 단말기를 일시적으로 마비시킵니다." },
+  { name: "근섬유 리미터 해제", desc: "아드레날린 분비를 강제로 폭발시켜 인간의 한계를 넘는 순간적인 완력과 도약력을 5배 이상 끌어올려 기계 의체와 맞서게 합니다." },
+  { name: "망막 사념 인젝션", desc: "시선이 마주친 타인의 시신경망에 불법 환각 패킷을 찔러 넣어, 몇 분 동안 지독한 공포와 지체 현상을 겪게 만듭니다." },
+  { name: "인과율 인지 지체", desc: "자신을 제외한 주변 3미터 공간의 타임라인을 순간적으로 '렉 걸린 것처럼' 0.5초간 동결시켜 완벽한 선공권을 쥡니다." },
+  { name: "생체 세포 가역 변형", desc: "순간적으로 자신의 신체 일부를 연성 고철 수준으로 경화시키거나 점성을 주어 물리적 충격을 흡수하고 무기를 막아냅니다." }
+];
+
+const KOWLOON_BODY_PARTS = [
+  { part: "전두엽 대뇌피질", symptom: "뇌수가 끓는 듯한 전반적인 뇌압 상승과 극심한 편두통, 순간적인 전신 마비" },
+  { part: "안구 시신경 다발", symptom: "시신경 과열로 인한 안구 내 모세혈관 동시 파열, 혈루(피눈물) 배출 및 일시적 안구 실명" },
+  { part: "심장 근육 및 판막", symptom: "강제 불규칙 박동 반동으로 인한 흉부 압박감, 호흡 곤란 및 수초 간의 인위적 심정지 위험" },
+  { part: "요추 중추 신경망", symptom: "척추 부위의 영적 방사능 급증으로 인한 극심한 척수 통증 및 하반신 감각의 일시적 소실" },
+  { part: "폐 순환계 및 이비인후", symptom: "폐포 파열로 인한 폐 내부 역류 현상, 심각한 객혈(피가래)과 이명으로 인한 평형감각 상실" }
+];
+
+const KOWLOON_BACKLASH_TAILS = [
+  "능력 종료 직후 최소 반나절 동안 손가락 하나 까딱할 수 없는 영구적 나태·무기력 상태에 고정됩니다.",
+  "뇌 신경 오염의 대가로 심각한 단기 기억장애가 발생하여, 직전 상황이나 자신의 이름조차 수분간 완전히 망각합니다.",
+  "언어 중추 신경 교란으로 인해 몇 시간 동안 기괴한 환청을 겪으며, 타인과 대화 시 실어증이나 웅얼거림 증세가 동반됩니다.",
+  "생체 에너지가 바닥나 미각과 후각 필터가 마비되며, 입안 가득 비릿한 생피 냄새와 타버린 전선 탄내만 맴돕니다.",
+  "의체 보행 센서와 생체 신호가 동기화 오류를 일으켜 전신에서 기분 나쁜 기계 마찰음이 터지고 반사신경이 극도로 저하됩니다."
+];
+
+const KOWLOON_KEYWORDS = {
+  "불": { name: "화합물 발화 흔적", desc: "구룡 골목에 자욱한 인공 가스 및 공업 오일 성분을 영적으로 간섭하여 지독한 플라스틱 탄내를 풍기는 네온빛 화염을 일으킵니다." },
+  "시간": { name: "지체된 프레임 드롭", desc: "자신 주변의 인지 타임라인을 순간적으로 조작하여 상대방의 공격 궤적을 느리게 관찰하고 회피할 틈을 벌어냅니다." },
+  "기억": { name: "신경망 가짜 패킷 주입", desc: "타인의 전두엽에 동기화 오류를 일으켜 불과 5분 전에 자신과 했던 약속이나 거래 대금을 조작하여 혼란을 줍니다." }
+};
+
+// 무작위 오염 능력 굴리기 함수
+function randomPower(){
+  const t = pick(KOWLOON_POWER_TYPES);
+  const e = pick(KOWLOON_POWER_EFFECTS);
+  const b = pick(KOWLOON_BODY_PARTS);
+  const tail = pick(KOWLOON_BACKLASH_TAILS);
+
+  const finalName = `${t.type}: ${e.name} (${t.suffix})`;
+  const finalBacklash = `[${b.part} 과부하] ${b.symptom}. ${tail}`;
+
+  STATE.power = `${finalName} — ${e.desc}`;
+  STATE.backlash = finalBacklash;
+  document.getElementById('powerIn').value = '';
+
+  document.getElementById('powerOut').innerHTML =
+    `<div class="out"><div class="bar"><span>異能 LOCAL</span><span>무작위 오염 등록</span></div>
+     <div class="body"><div class="pname">${esc(finalName)}</div>
+     <div class="pdesc">${esc(e.desc)}</div>
+     <div class="penalty"><div class="lab">罰 · 반작용</div>
+     <div class="txt">${esc(finalBacklash)}</div></div></div></div>`;
+  unlock('s3'); refresh();
+}
+
+// 무능력자 선택 함수
+function noPower(){
+  const obj=pick(NON_POWER_RULES);
+  STATE.power=`무능력자/${obj.name} — ${obj.desc}`;
+  STATE.backlash=obj.backlash;
+  document.getElementById('powerOut').innerHTML=
+    `<div class="out"><div class="bar"><span>非能 LOCAL</span><span>생존기 등록</span></div>
+     <div class="body"><div class="pname">${esc(obj.name)}</div>
+     <div class="pdesc">${esc(obj.desc)}</div>
+     <div class="penalty"><div class="lab">弱點 · 대가</div>
+     <div class="txt">${esc(obj.backlash)}</div></div></div></div>`;
+  unlock('s3'); refresh();
+}
+
+// 키워드 직접 입력 및 오염도 보정 검사 함수
+function refinePower(){
+  const input=document.getElementById('powerIn').value.trim();
+  const out=document.getElementById('powerOut');
+  if(!input){out.innerHTML='<div class="err">능력을 먼저 적으세요. 빈칸은 무능력자 버튼으로.</div>';return;}
+  const btn=document.getElementById('refineBtn'); btn.disabled=true;
+  out.innerHTML='<div class="out"><div class="loading">단말이 신체 오염도를 측정 중<span class="blip"> ▮▮▮▮</span></div></div>';
+
+  setTimeout(()=>{
+    let matchedEffect = null;
+    for(let key in KOWLOON_KEYWORDS) {
+      if(input.includes(key)) {
+        matchedEffect = KOWLOON_KEYWORDS[key];
+        break;
+      }
+    }
+    if(!matchedEffect) {
+      matchedEffect = {
+        name: `변칙 변형형 [${input}]`,
+        desc: `단말이 당신이 입력한 [${input}] 능력을 구룡섹터의 전자기 노이즈 환경에 맞춰 강제로 변조한 결과물입니다.`
+      };
+    }
+
+    const t = pick(KOWLOON_POWER_TYPES);
+    const b = pick(KOWLOON_BODY_PARTS);
+    const tail = pick(KOWLOON_BACKLASH_TAILS);
+
+    const finalName = `${t.type}: ${matchedEffect.name}`;
+    const finalBacklash = `[${b.part} 과부하] ${b.symptom}. ${tail}`;
+
+    STATE.power=`${finalName} — ${matchedEffect.desc}`;
+    STATE.backlash=finalBacklash;
+    out.innerHTML=
+      `<div class="out"><div class="bar"><span>異能 LOCAL</span><span>오프라인 오염 등록</span></div>
+       <div class="body"><div class="pname">${esc(finalName)}</div>
+       <div class="pdesc">${esc(matchedEffect.desc)}</div>
+       <div class="penalty"><div class="lab">罰 · 반작용</div>
+       <div class="txt">${esc(finalBacklash)}</div></div></div></div>`;
+    unlock('s3'); refresh(); btn.disabled=false;
+  }, 450);
+}
+
+function esc(s){return (s||"").replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+function updatePast(force=false){
+  const inp=document.getElementById('pastIn');
+  STATE.past=inp.value.trim();
+  if(STATE.past){
+    unlock('s4');
+    refresh();
+    if(force) document.getElementById('s4').scrollIntoView({behavior:'smooth',block:'start'});
+    return true;
+  }
+  if(force){
+    alert('한 줄 과거를 입력하거나 [과거 굴리고 진행]을 눌러주세요.');
+    inp.focus();
+  }
+  refresh();
+  return false;
+}
+
+document.getElementById('pastIn').addEventListener('input',()=>updatePast());
+document.getElementById('pastIn').addEventListener('change',()=>updatePast());
+document.getElementById('pastIn').addEventListener('blur',()=>updatePast());
+
+function buildCertPlain(){
+  // 크랙 시작 설정용: 토큰 절약을 위해 짧은 등록 정보만 출력
+  const lines=[
+    `[ⓤ 설정]`,
+    `名:${STATE.name||''} / 外:${getAppearanceLine()}`,
+    `出:${ORIGIN_LABEL[STATE.origin]||''} / 過:${STATE.past||''}`,
+    `能:${getPowerTitle()} / 罰:${getBacklashBrief()}`,
+    `勢:${STATE.faction||''} / 位:${getPositionTitle()}`,
+    `所:${STATE.watts||''}`
+  ];
+  return lines.join('\n');
+}
+function setCertValue(txt){
+  const cert=document.getElementById('cert');
+  if(!cert) return;
+  const shouldReplace=!STATE.certTouched || cert.value===STATE.lastGeneratedCert || !cert.value.trim() || cert.value.startsWith('…');
+  STATE.lastGeneratedCert=txt;
+  if(shouldReplace) cert.value=txt;
+}
+function refresh(){
+  // 등록증 생성 (필수: 기본신원·출신·능력/생존기·과거·세력·위치·최초 W)
+  const ready=STATE.name&&STATE.height&&STATE.features&&STATE.origin&&STATE.power&&STATE.past&&STATE.faction&&STATE.position&&STATE.watts;
+  if(!ready){setCertValue('… 단계를 모두 채우면 등록증이 발급됩니다 …');return;}
+  setCertValue(buildCertPlain());
+}
+function resetCertToGenerated(){
+  STATE.certTouched=false;
+  document.getElementById('cert').value=STATE.lastGeneratedCert||buildCertPlain();
+}
+
+function copyCert(){
+  const plain=document.getElementById('cert').value;
+  navigator.clipboard?.writeText(plain).then(showToast,()=>fallbackCopy(plain));
+}
+function fallbackCopy(t){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);
+  ta.select();try{document.execCommand('copy');showToast();}catch(e){}document.body.removeChild(ta);}
+function showToast(){const t=document.getElementById('toast');t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);}
+
+function loadProfilePhoto(ev){
+  const file=ev.target.files&&ev.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{STATE.photoData=reader.result; document.getElementById('idPreview').textContent='사진 등록 완료 — [등록증 출력]을 누르세요.';};
+  reader.readAsDataURL(file);
+}
+function clearProfilePhoto(){
+  STATE.photoData=null;
+  const inp=document.getElementById('photoIn'); if(inp) inp.value='';
+  document.getElementById('idPreview').textContent='사진 없이 발급됩니다.';
+}
+function wrapCanvasText(ctx,text,x,y,maxWidth,lineHeight,maxLines){
+  const words=String(text||'').split(/\s+/); let line='', lines=[];
+  for(const word of words){
+    const test=line?line+' '+word:word;
+    if(ctx.measureText(test).width>maxWidth && line){lines.push(line); line=word;}
+    else line=test;
+  }
+  if(line) lines.push(line);
+  if(maxLines && lines.length>maxLines){lines=lines.slice(0,maxLines); lines[lines.length-1]=lines[lines.length-1].replace(/…?$/,'')+'…';}
+  lines.forEach((ln,i)=>ctx.fillText(ln,x,y+i*lineHeight));
+  return y+lines.length*lineHeight;
+}
+function drawCoverImage(ctx,img,x,y,w,h){
+  const r=Math.max(w/img.width,h/img.height);
+  const nw=img.width*r, nh=img.height*r;
+  ctx.drawImage(img,x+(w-nw)/2,y+(h-nh)/2,nw,nh);
+}
+function loadImage(src){
+  return new Promise((resolve,reject)=>{const img=new Image(); img.onload=()=>resolve(img); img.onerror=reject; img.src=src;});
+}
+function getPowerTitle(){
+  const raw=String(STATE.power||'').split('—')[0].trim();
+  return raw.replace(/^무능력자\//,'') || '미등록';
+}
+function getPositionTitle(){
+  return String(STATE.position||'').split('—')[0].trim() || '미등록';
+}
+
+function getBacklashBrief(){
+  const b=String(STATE.backlash||'').trim();
+  if(!b) return '';
+  const m=b.match(/^\[([^\]]+)\]\s*([^.,。]+)/);
+  if(m){
+    const symptom=m[2].replace(/\s+/g,' ').slice(0,34);
+    return `${m[1]}:${symptom}`;
+  }
+  return b.length>48 ? b.slice(0,48)+'…' : b;
+}
+
+function getAppearanceLine(){
+  const base=[STATE.height, STATE.features].filter(Boolean).join(', ');
+  return base && !/[.!?。]$/.test(base) ? base+'.' : (base||'미등록');
+}
+function fitCanvasText(ctx,text,x,y,maxWidth){
+  let t=String(text||'');
+  if(ctx.measureText(t).width<=maxWidth){ctx.fillText(t,x,y);return;}
+  while(t.length>1 && ctx.measureText(t+'…').width>maxWidth) t=t.slice(0,-1);
+  ctx.fillText(t+'…',x,y);
+}
+
+function drawKowloonSeal(ctx,cx,cy,size){
+  // 가장 위 레이어용 구룡 직인. 글자가 프레임 안을 꽉 채우는 진짜 도장 느낌.
+  ctx.save();
+  ctx.translate(cx,cy); ctx.rotate(-0.13);
+  ctx.globalCompositeOperation='source-over';
+  const red='rgba(255,43,70,.92)';
+  ctx.strokeStyle=red; ctx.lineWidth=Math.max(5, size*.045);
+  ctx.strokeRect(-size/2,-size/2,size,size);
+  ctx.strokeStyle='rgba(255,43,70,.64)'; ctx.lineWidth=Math.max(2, size*.018);
+  const inset=Math.max(7, size*.055);
+  ctx.strokeRect(-size/2+inset,-size/2+inset,size-inset*2,size-inset*2);
+  ctx.fillStyle='rgba(255,43,70,.90)';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.shadowColor='rgba(255,43,70,.28)'; ctx.shadowBlur=8;
+  ctx.font='900 '+Math.floor(size*.36)+'px "Noto Sans KR", "Black Han Sans", sans-serif';
+  ctx.fillText('九龍',0,-size*.19);
+  ctx.font='900 '+Math.floor(size*.34)+'px "Noto Sans KR", "Black Han Sans", sans-serif';
+  ctx.fillText('直印',0,size*.21);
+  ctx.shadowBlur=0;
+  ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+  ctx.restore();
+}
+function applyCardNoise(ctx,W,H){
+  // 다운로드 PNG 자체에 박히는 브라운관 스캔라인 + 노이즈
+  ctx.save();
+  ctx.globalAlpha=.22;
+  ctx.fillStyle='#000';
+  for(let y=0;y<H;y+=3) ctx.fillRect(0,y,W,1);
+  ctx.globalAlpha=.075;
+  for(let i=0;i<1550;i++){
+    const x=Math.random()*W, y=Math.random()*H;
+    ctx.fillStyle=Math.random()>.5?'#16efc6':'#ffffff';
+    ctx.fillRect(x,y,Math.random()*1.8+0.4,Math.random()*1.8+0.4);
+  }
+  ctx.globalAlpha=.08;
+  ctx.fillStyle='#ff2b46';
+  for(let i=0;i<85;i++) ctx.fillRect(Math.random()*W,Math.random()*H,Math.random()*38+3,1);
+  ctx.restore();
+}
+function showIssueEffect(){
+  const box=document.getElementById('idPreview');
+  box.classList.add('issuing');
+  box.innerHTML='<div class="issueFx"><div class="txt">KOWLOON CARD PRINTING<span class="subtxt">NOISE SYNC · SEAL READY · SERIAL BURNING</span></div></div>';
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+async function renderIdCard(){
+  const canvas=document.getElementById('idCanvas'); const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  const grd=ctx.createLinearGradient(0,0,W,H);
+  grd.addColorStop(0,'#07100e'); grd.addColorStop(.58,'#101413'); grd.addColorStop(1,'#170c10');
+  ctx.fillStyle=grd; ctx.fillRect(0,0,W,H);
+
+  // 낡은 단말 배경 장식
+  ctx.fillStyle='rgba(22,239,198,.045)'; ctx.font='900 96px "Noto Sans KR", sans-serif'; ctx.fillText('九龍',735,108);
+  ctx.fillStyle='rgba(255,43,70,.035)'; ctx.font='900 52px "Noto Sans Mono", monospace'; ctx.fillText('NO SIGNAL',642,548);
+
+  // 안전 여백을 크게 둔 프레임
+  ctx.strokeStyle='#16efc6'; ctx.lineWidth=3; ctx.strokeRect(28,28,W-56,H-56);
+  ctx.strokeStyle='rgba(255,176,37,.48)'; ctx.lineWidth=1; ctx.strokeRect(48,48,W-96,H-96);
+
+  ctx.fillStyle='#16efc6'; ctx.font='900 38px "Noto Sans KR", sans-serif'; ctx.fillText('九龍 臨時入住證',70,92);
+  ctx.fillStyle='#ff2b46'; ctx.font='700 17px "Noto Sans Mono", monospace'; ctx.fillText('KOWLOON SECTOR TEMPORARY RESIDENT CARD',72,121);
+
+  // 사진 영역
+  ctx.fillStyle='rgba(22,239,198,.14)'; ctx.fillRect(70,152,260,330);
+  ctx.strokeStyle='#26322d'; ctx.lineWidth=2; ctx.strokeRect(70,152,260,330);
+  if(STATE.photoData){
+    try{const img=await loadImage(STATE.photoData); ctx.save(); ctx.beginPath(); ctx.rect(82,164,236,306); ctx.clip(); drawCoverImage(ctx,img,82,164,236,306); ctx.restore();}
+    catch(e){STATE.photoData=null;}
+  }
+  if(!STATE.photoData){
+    ctx.fillStyle='rgba(214,231,223,.12)'; ctx.fillRect(82,164,236,306);
+    ctx.fillStyle='rgba(214,231,223,.28)'; ctx.beginPath(); ctx.arc(200,266,52,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(125,336,150,96,34); ctx.fill();
+    ctx.fillStyle='#6f877d'; ctx.font='700 20px "Noto Sans KR"'; ctx.textAlign='center'; ctx.fillText('NO PHOTO',200,462); ctx.textAlign='left';
+  }
+
+  ctx.fillStyle='#080b0a'; ctx.fillRect(70,499,260,43);
+  ctx.strokeStyle='rgba(255,176,37,.18)'; ctx.strokeRect(70,499,260,43);
+  ctx.fillStyle='#ffb025'; ctx.font='700 17px "Noto Sans Mono", monospace';
+  ctx.textAlign='center'; ctx.fillText(STATE.serial||'KOW-UNREGISTERED',200,527); ctx.textAlign='left';
+
+  const x=370, labelW=78, valueX=x+90, maxW=500;
+  let y=176;
+  function row(label,value){
+    ctx.fillStyle='#b3854c'; ctx.font='700 17px "Noto Sans KR"'; ctx.fillText(label,x,y);
+    ctx.fillStyle='#d6e7df'; ctx.font='800 24px "Noto Sans KR"';
+    fitCanvasText(ctx,value,valueX,y,maxW);
+    y+=54;
+  }
+
+  row('姓名', `${STATE.name||'미등록'} [${ORIGIN_LABEL[STATE.origin]||'출신 미등록'}]`);
+  row('外形', getAppearanceLine());
+  row('異能', getPowerTitle());
+  row('勢力', STATE.faction||'미등록');
+  row('位置', getPositionTitle());
+
+  // 하단 주의문 박스 — 바깥 프레임과 같은 민트색 계열
+  const noteX=370, noteY=474, noteW=560, noteH=70;
+  ctx.fillStyle='rgba(22,239,198,.055)'; ctx.fillRect(noteX,noteY,noteW,noteH);
+  ctx.strokeStyle='rgba(22,239,198,.82)'; ctx.strokeRect(noteX,noteY,noteW,noteH);
+  ctx.fillStyle='#16efc6'; ctx.font='900 18px "Noto Sans KR"'; ctx.fillText('NOTICE',392,504);
+  ctx.fillStyle='#d6e7df'; ctx.font='700 15px "Noto Sans KR"';
+  ctx.fillText('외부 메가크레딧 무효 · 짝퉁칩 주의 · 위조칩 적발 시 척추담보 전환',392,530);
+
+  // 프레임과 겹치지 않게 위로 올린 작은 발급 문구
+  ctx.fillStyle='#6f877d'; ctx.font='11px "Noto Sans KR"';
+  ctx.fillText('※ 발급기관은 책임지지 않음 · 사진/기재정보 위조 시 골목 재판으로 이관',72,565);
+  ctx.fillStyle='rgba(22,239,198,.6)'; ctx.fillRect(70,576,860,1);
+
+  applyCardNoise(ctx,W,H);
+
+  // 최상단 레이어 직인 — 노이즈와 글씨 위에 마지막으로 찍힌다.
+  drawKowloonSeal(ctx,805,356,182);
+  return canvas.toDataURL('image/png');
+}
+async function issueIdCard(){
+  if(!STATE.name||!STATE.height||!STATE.features){alert('먼저 이름, 키, 신체특징을 입력해주세요.');return;}
+  showIssueEffect();
+  await sleep(1450);
+  const url=await renderIdCard();
+  document.getElementById('idPreview').classList.remove('issuing');
+  document.getElementById('idPreview').innerHTML=`<img src="${url}" alt="구룡 임시입주증 출력본">`;
+}
+async function previewIdCard(){
+  return issueIdCard();
+}
+async function downloadIdCard(){
+  if(!STATE.name||!STATE.height||!STATE.features){alert('먼저 이름, 키, 신체특징을 입력해주세요.');return;}
+  const url=await renderIdCard();
+  const a=document.createElement('a');
+  const safe=(STATE.name||'kowloon').replace(/[\\/:*?"<>|\s]+/g,'_');
+  a.href=url; a.download=`kowloon_id_${safe}.png`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+</script>
