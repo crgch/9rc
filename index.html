@@ -5,656 +5,135 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Sans+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{\n    --bg:#080b0a; --panel:#101413; --panel2:#161d1b;\n    --ink:#d6e7df; --muted:#6f877d; --line:#26322d;\n    --neon:#16efc6; --shrine:#ff2b46; --amber:#ffb025; --copper:#b3854c;\n    --glow:0 0 18px rgba(22,239,198,.35);\n  }\n  *{box-sizing:border-box}\n  html,body{margin:0;background:var(--bg);color:var(--ink);\n    font-family:'Noto Sans KR',system-ui,sans-serif;line-height:1.55}\n  body{padding:24px 12px;display:flex;flex-direction:column;align-items:center}\n  header{width:100%;max-width:560px;margin-bottom:28px;border-bottom:1px solid var(--line);padding-bottom:14px}\n  h1{font-family:'Black Han Sans',sans-serif;font-size:32px;color:var(--neon);margin:0;letter-spacing:1px;\n    text-shadow:var(--glow);display:flex;align-items:center;justify-content:between}\n  h1 span.ver{font-family:'Noto Sans Mono',monospace;font-size:11px;color:var(--muted);font-weight:400;margin-left:auto}\n  header p{font-size:13px;color:var(--muted);margin:6px 0 0 0}\n  main{width:100%;max-width:560px;display:flex;flex-direction:column;gap:24px}\n  section{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:18px;position:relative;transition:all .2s}\n  section.locked{opacity:.25;pointer-events:none;filter:grayscale(60%)}\n  section.locked::after{content:'LOCKED';position:absolute;top:14px;right:14px;font-family:'Noto Sans Mono',monospace;\n    font-size:10px;color:var(--shrine);border:1px solid var(--shrine);padding:1px 4px;border-radius:2px;font-weight:700;letter-spacing:1px}\n  .step{display:flex;align-items:center;gap:10px;margin-bottom:16px;border-bottom:1px solid var(--line);padding-bottom:8px}\n  .step .num{font-family:'Black Han Sans',sans-serif;font-size:18px;color:var(--neon)}\n  h2{font-size:15px;margin:0;font-weight:700;color:var(--ink);letter-spacing:.5px}\n  h2 .ko{font-size:12px;color:var(--muted);font-weight:400;margin-left:4px}\n  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}\n  .input-group{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}\n  label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px}\n  input[type="text"]{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:3px;\n    padding:10px 12px;color:var(--ink);font-size:14px;transition:all .15s}\n  input[type="text"]:focus{outline:none;border-color:var(--neon);box-shadow:var(--glow)}\n  .row{display:flex;gap:10px;margin-top:12px}\n  button{flex:1;background:var(--neon);color:#040605;border:none;border-radius:3px;padding:11px;\n    font-size:13px;font-weight:900;cursor:pointer;transition:all .15s;font-family:'Noto Sans KR',sans-serif}\n  button:hover{opacity:.9;box-shadow:var(--glow)}\n  button.ghost{background:transparent;color:var(--neon);border:1px solid var(--neon)}\n  button.ghost:hover{background:rgba(22,239,198,.08)}\n  button.shrine{background:var(--shrine);color:#fff}\n  button.shrine:hover{box-shadow:0 0 12px rgba(255,43,70,.3)}\n  button:disabled{background:var(--line) !important;color:var(--muted) !important;cursor:not-allowed;box-shadow:none !important}\n  .cards{display:flex;flex-direction:column;gap:10px}\n  .card{background:var(--panel2);border:1px solid var(--line);border-radius:3px;padding:12px;cursor:pointer;position:relative;transition:all .15s}\n  .card:hover{border-color:var(--neon)}\n  .card.on{border-color:var(--neon);background:rgba(22,239,198,.04);box-shadow:var(--glow)}\n  .card .ct{font-weight:700;font-size:14px;color:var(--ink);margin-bottom:4px}\n  .card .cd{font-size:12px;color:var(--muted);line-height:1.45}\n  .badgeRow{display:flex;gap:6px;margin-bottom:6px}\n  .badge{font-size:9px;font-weight:700;padding:1px 4px;border-radius:2px;letter-spacing:.3px}\n  .badge.rec{background:rgba(22,239,198,.12);color:var(--neon);border:1px solid rgba(22,239,198,.25)}\n  .badge.hard{background:rgba(255,43,70,.12);color:var(--shrine);border:1px solid rgba(255,43,70,.25)}\n  .facs{display:flex;flex-direction:column;gap:8px}\n  .fac{background:var(--panel2);border:1px solid var(--line);border-radius:3px;padding:12px;cursor:pointer;transition:all .15s}\n  .fac:hover{border-color:var(--neon)}\n  .fac.on{border-color:var(--neon);background:rgba(22,239,198,.03);box-shadow:var(--glow)}\n  .fac .fn{font-weight:700;font-size:14px;color:var(--ink);margin-bottom:4px}\n  .fac .fd{font-size:12px;color:var(--muted);line-height:1.4}\n  .out{background:#0b0e0d;border:1px dashed var(--line);border-radius:3px;padding:12px;margin-top:10px}\n  .out .bar{display:flex;justify-content:space-between;font-family:'Noto Sans Mono',monospace;font-size:9px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:4px;margin-bottom:8px}\n  .out .pname{font-size:15px;font-weight:900;color:var(--neon);letter-spacing:.3px}\n  .out .pdesc{font-size:12px;color:var(--ink);margin-top:4px;line-height:1.45}\n  .out .penalty{margin-top:10px;background:rgba(255,43,70,.04);border:1px solid rgba(255,43,70,.15);border-radius:2px;padding:8px}\n  .out .penalty .lab{font-size:10px;color:var(--shrine);font-weight:900;margin-bottom:2px;letter-spacing:.5px}\n  .out .penalty .txt{font-size:12px;color:#fca5a5;line-height:1.4}\n  .err{color:var(--shrine);font-size:12px;margin-top:6px;font-weight:500}\n  .loading{font-size:12px;color:var(--amber);display:flex;align-items:center;gap:6px}\n  .blip{animation:blink 1s infinite steps(1)}\n  @keyframes blink{0%,100%{opacity:0}50%{opacity:1}}\n  .wbig{font-family:'Black Han Sans',sans-serif;font-size:36px;color:var(--amber);line-height:1;margin-bottom:6px}\n  .wdesc{font-size:12px;color:var(--ink);line-height:1.45}\n  .wsub{font-size:11px;color:var(--muted);margin-top:4px}\n  #certBox{background:#070a09;border:1px solid var(--line);padding:14px;border-radius:3px;font-family:'Noto Sans Mono',monospace;font-size:12px;color:#a3b8ae;white-space:pre-wrap;word-break:break-all;line-height:1.5}\n  .toast{position:fixed;bottom:20px;background:var(--neon);color:#000;padding:8px 16px;font-size:12px;font-weight:900;border-radius:2px;box-shadow:var(--glow);opacity:0;transition:opacity .2s;pointer-events:none;z-index:9999}\n  .toast.show{opacity:1}\n  .photo-slot{width:110px;height:135px;background:var(--panel2);border:1px dashed var(--line);border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;transition:all .15s}\n  .photo-slot:hover{border-color:var(--neon)}\n  .photo-slot i{font-size:20px;color:var(--muted);margin-bottom:4px}\n  .photo-slot span{font-size:10px;color:var(--muted);font-weight:700}\n  .photo-slot img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;z-index:2}\n  .photo-row{display:flex;gap:14px;align-items:flex-end;margin-bottom:12px}\n  .photo-controls{display:flex;flex-direction:column;gap:6px;flex:1}\n  .photo-hint{font-size:11px;color:var(--muted);line-height:1.4}\n</n></style>
-
-<header>
-  <h1>九龍 居住地 入住 登錄 <span class="ver">SYS_VER 4.09.2</span></h1>
-  <p>메가시티 전역 생체실험체 탈주자 및 불법 거주자 성채 단말기 오프라인 프로토콜</p>
-</header>
-
-<main>
-  <section id="s0">
-    <div class="step"><span class="num">零</span> <h2>基本 辨別 <span class="ko">/ 인적 사항 기록</span></h2></div>
-    <div class="photo-row">
-      <div class="photo-slot" onclick="document.getElementById('photoFile').value=''; document.getElementById('photoFile').click()">
-        <i class="blip">⎾⎿</i>
-        <span>의체사진 등록</span>
-        <img id="photoPrev" style="display:none">
-      </div>
-      <div class="photo-controls">
-        <input type="file" id="photoFile" accept="image/*" style="display:none" onchange="loadProfilePhoto(event)">
-        <div class="photo-hint">의체나 아바타 스크린샷 이미지를 등록하면 최종 발급증 배포 시 주민증 카드로 합성 인쇄됩니다. (정사각형 또는 세로형 권장)</div>
-        <button class="ghost" style="padding:6px; font-size:11px; max-width:80px; margin-top:4px" onclick="clearProfilePhoto()">사진 제거</button>
-      </div>
-    </div>
-    <div class="input-group">
-      <label>識別名 / 이름</label>
-      <input type="text" id="nameIn" placeholder="구룡에서 쓰일 가명이나 탈주 번호 입력" oninput="updateProfile()" onchange="updateProfile()" onblur="updateProfile()" onkeydown="if(event.key==='Enter'){updateProfile(true)}">
-    </div>
-    <div class="grid2">
-      <div class="input-group">
-        <label>身體長 / 키(cm)</label>
-        <input type="text" id="heightIn" placeholder="예) 178" oninput="updateProfile()" onchange="updateProfile()" onblur="updateProfile()" onkeydown="if(event.key==='Enter'){updateProfile(true)}">
-      </div>
-      <div class="input-group">
-        <label>外形 特徵 / 눈물점·쉼표머리 등</label>
-        <input type="text" id="featureIn" placeholder="예) 쉼표머리, 볼 안쪽 혀로 누르는 버릇" oninput="updateProfile()" onchange="updateProfile()" onblur="updateProfile()" onkeydown="if(event.key==='Enter'){updateProfile(true)}">
-      </div>
-    </div>
-    <button class="btn" style="margin-top:6px" onclick="updateProfile(true)">인적사항 등록 완료</button>
-  </section>
-
-  <section id="s1" class="locked">
-    <div class="step"><span class="num">壹</span> <h2>出身 <span class="ko">/ 시궁창에 오기 전의 궤적</span></h2></div>
-    <div class="cards">
-      <div class="card" data-origin="megacity" onclick="pickOrigin(this)">
-        <div class="ct">메가시티 실험실 탈주자 (Laboratory Fugitive)</div>
-        <div class="cd">중앙 정부 통제국 생체 실험실 출신. 비인간적 오버클록으로 이능력을 얻었으나 영적 방사능 오염과 추적 낙인이 찍힌 도망자. 깊은 내상(체념) 보유.</div>
-      </div>
-      <div class="card" data-origin="slum" onclick="pickOrigin(this)">
-        <div class="ct">구룡 성채 토박이 (Kowloon Native)</div>
-        <div class="cd">태어날 때부터 회색 전선 천장만 보고 자란 성채 하층민. 야매 기술이나 도박, 밑바닥 생존 눈치에 도가 텄으며 돈과 안전 가옥이 제일 소중함.</div>
-      </div>
-    </div>
-  </section>
-
-  <section id="s2" class="locked">
-    <div class="step"><span class="num">貳</span> <h2>異能力 <span class="ko">/ 신체 오염의 대가</span></h2></div>
-    <input type="text" id="powerIn" placeholder="원하는 능력 키워드(불, 시간, 기억 등) 한 줄 적고 [보정]">
-    <div class="row">
-      <button class="ghost" onclick="randomPower()">무작위 오염 각성</button>
-      <button class="ghost" onclick="noPower()">순수 무능력 고기방패</button>
-      <button class="btn" id="refineBtn" onclick="refinePower()">이능 키워드 보정</button>
-    </div>
-    <div id="powerOut"></div>
-  </section>
-
-  <section id="s3" class="locked">
-    <div class="step"><span class="num">参</span> <h2>過去 <span class="ko">/ 한 줄짜리 사연</span></h2></div>
-    <input type="text" id="pastIn" placeholder="한 줄 과거를 직접 적으면 다음 단계가 열립니다. 또는 [굴리기]" oninput="updatePast()" onchange="updatePast()" onblur="updatePast()" onkeydown="if(event.key==='Enter'){updatePast(true)}">
-    <div class="row">
-      <button class="ghost" onclick="rollPast()">과거 굴리고 진행</button>
-      <button class="btn" onclick="updatePast(true)">직접 입력 완료</button>
-    </div>
-  </section>
-
-  <section id="s4" class="locked">
-    <div class="step"><span class="num">肆</span> <h2>勢力 <span class="ko">/ 어느 줄에 설 텐가</span></h2></div>
-    <div class="facs" id="facList"></div>
-  </section>
-
-  <section id="s5" class="locked">
-    <div class="step"><span class="num">伍</span> <h2>位置 <span class="ko">/ 그 줄 안에서의 자리</span></h2></div>
-    <div class="facs" id="posList"></div>
-  </section>
-
-  <section id="s6" class="locked">
-    <div class="step"><span class="num">陸</span> <h2>所持瓦特 <span class="ko">/ 초기 생존 자금 측정</span></h2></div>
-    <div class="row" style="margin-top:0">
-      <button class="ghost" onclick="rollWatts()">배터리 잔량 셔플 (랜덤 W)</button>
-      <button class="btn" onclick="manualWatts()">고철 줍기 정착 (기본 5W)</button>
-    </div>
-    <div id="wOut" class="out">
-      <div class="wbig">미등록</div>
-      <div class="wdesc">1W≈배양만두 1개 / 의체충전 1회 / 관짝방 하루. 메가크레딧은 구룡에서 죽은 돈입니다.</div>
-      <div class="wsub">짝퉁칩·빈칩·물 채운 가짜칩 주의. 믿을 건 삼합회 인증각인뿐이라는 더러운 농담이 있습니다.</div>
-    </div>
-  </section>
-
-  <section id="cardSec" class="locked">
-    <div class="step"><span class="num">柒</span> <h2>發給 <span class="ko">/ 입주 등록 세션 프로필 배포</span></h2></div>
-    <p style="font-size:12px; color:var(--muted); margin-top:-6px; margin-bottom:12px">아래 생성된 데이터 크랙 텍스트를 복사해 첫 프롬프트 세션 세팅으로 붙여넣으십시오. 하단 주민증 발급 버튼을 누르면 다운로드용 고유 도장이 찍힌 위조 주민증이 Canvas 그래픽으로 즉시 인쇄됩니다.</p>
-    <div id="certBox"></div>
-    <div class="row">
-      <button class="ghost" onclick="copyCert()">텍스트 프로필 복사</button>
-      <button class="btn shrine" onclick="previewIdCard()">주민증 인쇄 및 다운로드</button>
-    </div>
-    <div id="canvasZone" style="margin-top:14px; text-align:center; display:none">
-      <canvas id="idCanvas" width="1000" height="600" style="width:100%; max-width:500px; border:1px solid var(--line); background:#0c0f0e; border-radius:4px"></canvas>
-      <div class="row" style="max-width:500px; margin:10px auto 0 auto">
-        <button class="btn" style="padding:8px" onclick="downloadIdCard()">PNG 이미지 파일로 저장</button>
-      </div>
-    </div>
-  </section>
-</main>
-
-<div class="toast" id="toast">복사 완료. 단말 우회망에 임시 저장되었습니다.</div>
-
-<script>
-const STATE={ name:null, height:null, features:null, origin:null, faction:null, factionId:null, position:null, watts:null, past:null, power:null, backlash:null, photoData:null };
-const ORIGIN_LABEL={ megacity:"실험실 탈주자", slum:"성채 토박이" };
-
-const FACTIONS={
-  megacity:[
-    {id:"union", fn:"이능력자 저항연합 (The Union)", fd:"마더(세인트 엘모)를 수장으로 모시는 실험실 도망자 집단. 동질감으로 뭉쳤으나 내면은 기괴한 사이비 종교나 군대처럼 끈적함.", rec:true, hard:false},
-    {id:"neutral", fn:"무소속 부랑자 / 야매 상인 (The Neutral)", fd:"어느 세력의 통제도 거부하고 3, 4구역 슬럼가 밑바닥에서 야매 기술이나 인편 배달, 고철 주머니로 하루벌어 하루 생존하는 부류.", rec:false, hard:false},
-    {id:"spook", fn:"국가 특무 통제국 위장 스파이 (Undercover Agent)", fd:"탈주 샘플 회수 및 성채 내분 조장을 위해 외부 정부에서 파견한 스파이. 본업은 첩보인데 구룡 생활에 찌들어 나태함.", rec:true, hard:true}
-  ],
-  slum:[
-    {id:"triad", fn:"사이버 삼합회 카르텔 (Cyber Triad)", fd:"구룡의 권력인 전력망(W)과 불법 하이테크 자본을 독점한 자본주의 깡패집단. 능력은 없으나 기계 의수와 물량, 돈으로 능력자들의 목줄을 쥠.", rec:true, hard:false},
-    {id:"neutral", fn:"성채 토박이 무소속 상인 (The Neutral)", fd:"3구역 시장통이나 4구역 배달 미로에서 대를 이어 살아남은 토박이들. 삼합회에 수금 바치고 연합을 기분 나쁜 정전 유발자로 취급함.", rec:false, false},
-    {id:"union", fn:"이능력자 저항연합 조력자 (Union Supporter)", fd:"이능력자는 아니지만 삼합회나 정부가 싫어서 연합에 불법 개조 장비나 전선을 야매로 대주고 와트를 뜯어내는 성채 부랑자.", rec:false, hard:true}
-  ]
-};
-
-const POSITIONS={
-  union:[
-    {name:"해커 보조", desc:"샤오민의 케이블·라우터·간식을 챙긴다. 온라인에선 쎄지만 현실에선 심부름이 많다.", rec:true, hard:false},
-    {name:"전당포 객구", desc:"혁의 5구역 하층 전당포 구석에서 뒹굴며 보초를 선다. 사장이 잠만 자서 실질적으론 혼자 가게를 본다.", rec:false, hard:true},
-    {name:"마더의 선전병", desc:"세인트엘모 방송과 폐모니터 제단을 관리한다. 신앙심보다 멀티탭이 더 중요하다.", rec:false, hard:true}
-  ],
-  neutral:[
-    {name:"야매 배달부", desc:"4구역 리하오 밑에서 짬뽕 배달이나 불법 서류 인편을 나른다. 미로 같은 지름길 암기가 목숨줄이다.", rec:true, hard:false},
-    {name:"만두집 시다", desc:"3구역 메이링 만두 매대에 앉아 서빙과 잔반을 처리한다. 사장 의수 고압증기 과열 시 식혀주는 하청.", rec:false, hard:false},
-    {name:"치과 조수", desc:"3구역 하층 진(眞)의 야매 진료소에서 피 묻은 가운을 빨고 촉수를 닦는다. 신경 뽑히는 소리에 익숙해져야 함.", rec:false, hard:true},
-    {name:"약방 따까리", desc:"3구역 린의 불법 약방에서 곰방대 연기를 환기하고 약재를 빻는다. 가끔 누나가 주는 환각제에 취함.", rec:true, hard:false}
-  ],
-  triad:[
-    {name:"수금 심부름꾼", desc:"통행세·전기세·보호비를 걷는다. 못 걷으면 자기 월급에서 빠진다.", rec:true, hard:false},
-    {name:"도박장 객식구", desc:"아강 주변에서 판돈과 사고를 같이 줍는다. 운보다 도망치는 발이 중요하다.", rec:false, hard:true},
-    {name:"전력선 하청", desc:"삼합회 전력망의 말단 관리. 감전과 욕설을 월급보다 자주 받는다.", rec:false, hard:true},
-    {name:"행동대 견습", desc:"율 밑에서 골목 군기를 배운다. 낮엔 심부름, 밤엔 그림자 뒤치다꺼리.", rec:true, hard:true}
-  ],
-  spook:[
-    {name:"흥신소 직원", desc:"건의 3구역 시장 모퉁이 『찾아드림』에서 접수·미행·잔심부름을 맡는다. 사장은 너무 정중해서 더 수상하다.", rec:true, hard:false},
-    {name:"신규 감찰요원", desc:"특무국이 나태한 잠입요원들을 감시하라고 새로 밀어 넣은 현장 요원. 감시 대상보다 서류가 더 안 움직인다.", rec:true, hard:true},
-    {name:"민원대행소 보조", desc:"미스터관의 『만물 민원·통행 대행소』에서 통행증·서류·분쟁 기록을 만진다. 본업은 첩보인데 실무는 민원 창구다.", rec:false, hard:false},
-    {name:"샘플회수 신입", desc:"특이 능력자 샘플과 실험 흔적을 회수하라는 임무를 받았다. 구룡에서는 회수품보다 본인 장기가 먼저 담보 잡힌다.", rec:false, hard:true}
-  ]
-};
-
-const PAST={
-  megacity:[
-    "실험체 번호로만 불리다 환풍구로 기어 나왔다.",
-    "각성 첫날 회사 빌딩을 반쯤 태우고 수배됐다.",
-    "위층 에어컨 폐수 가림막을 찢다가 삼합회 간부에게 찍혔다.",
-    "정부 스파이의 뒷덜미를 우연히 목격하고 입막음 비용을 뜯어냈다.",
-    "실험 부작용으로 일주일간 실명했다가 눈 밑에 흉터를 얻고 복귀했다."
-  ],
-  slum:[
-    "3구역 메이링 야매 만두집 8년 연속 단골 장부 기록자.",
-    "4구역 배달 미로에서 리하오와 철가방 레이싱 하다가 다리 의체 아작남.",
-    "도박장에서 아강 믿고 홀짝 올인했다가 빤스 빼고 다 털린 전적.",
-    "린의 곰방대 아편 연기를 너무 많이 마셔 사흘 동안 꿈에서 관우와 마작을 뒀다.",
-    "지하 암흑 카타콤에 고철 주우러 갔다가 빛나는 폭주자한테 쫓겨 이마에 상처가 생겼다."
-  ]
-};
-
-const RANDOM_POWERS=["불을 다룬다","아주 잠깐 시간을 멈춘다","남의 기억을 읽는다","쇠를 휘게 한다","그림자에 숨는다","상처를 빨리 아물게 한다","소리를 지운다","전자기기를 손으로 멈춘다","벽을 통과한다","남의 통증을 가져온다","물을 끌어모은다","거짓말을 냄새로 안다"];
-
-const W_SHELLS=["고철나사 한 줌", "녹슨 의체관절", "끊어진 구리전선 30cm", "삼합회 각인 없는 빈칩 2개", "부러진 전자부적", "배양만두 쿠폰 반쪽", "깡통무전기 배터리", "린 약봉투 하나", "수상한 영수증 뭉치"];
-const W_NOTES=[
-  "삼합회 인증각인은 절반뿐이라 환전상이 표정을 구길 예정.",
-  "추위나 누전 때 방전될 수 있어 주머니 안쪽에 숨겨야 한다.",
-  "빈칩이 섞였는지 혀로 핥아 확인하면 하루가 조금 더 비참해진다.",
-  "메가크레딧은 외부망이 죽어 장식품보다 못하다.",
-  "빚쟁이 앞에서 흔들면 소지금이 아니라 장기 담보 견적서가 된다."
-];
-
-function updateProfile(force=false){
-  const name=document.getElementById('nameIn').value.trim();
-  const height=document.getElementById('heightIn').value.trim();
-  const features=document.getElementById('featureIn').value.trim();
-  STATE.name=name; STATE.height=height; STATE.features=features;
-  if(name && height && features){
-    unlock('s1'); refresh();
-    if(force) document.getElementById('s1').scrollIntoView({behavior:'smooth',block:'start'});
-    return true;
+  :root{
+    --bg:#080b0a; --panel:#101413; --panel2:#161d1b;
+    --ink:#d6e7df; --muted:#6f877d; --line:#26322d;
+    --neon:#16efc6; --shrine:#ff2b46; --amber:#ffb025; --copper:#b3854c;
+    --glow:0 0 18px rgba(22,239,198,.35);
   }
-  if(force){
-    alert('이름, 키, 신체특징을 모두 입력해주세요.');
-    if(!name) document.getElementById('nameIn').focus();
-    else if(!height) document.getElementById('heightIn').focus();
-    else document.getElementById('featureIn').focus();
-  }
-  refresh(); return false;
-}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:'Noto Sans KR',system-ui,sans-serif;line-height:1.55}
+  body{padding:28px 16px 80px;position:relative;overflow-x:hidden}
+  /* 브라운관 스캔라인 */
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px);
+    mix-blend-mode:multiply;opacity:.5}
+  .wrap{max-width:680px;margin:0 auto}
+  .han{font-family:'Black Han Sans',sans-serif}
 
-function pickOrigin(el){
-  document.querySelectorAll('.pick').forEach(p=>p.classList.remove('on'));
-  el.classList.add('on');
-  STATE.origin=el.dataset.origin;
-  STATE.faction=null; STATE.factionId=null; STATE.position=null; STATE.watts=null;
-  document.getElementById('posList').innerHTML='';
-  document.getElementById('wOut').innerHTML='<div class="wbig">미등록</div><div class="wdesc">1W≈배양만두 1개 / 의체충전 1회 / 관짝방 하루. 메가크레딧은 구룡에서 죽은 돈입니다.</div><div class="wsub">짝퉁칩·빈칩·물 채운 가짜칩 주의. 믿을 건 삼합회 인증각인뿐이라는 더러운 농담이 있습니다.</div>';
-  lock('s5'); lock('s6'); lock('cardSec');
-  unlock('s2'); buildFactions();
-  document.getElementById('pastIn').placeholder =
-    STATE.origin==='megacity' ? "예) 각성 첫날 빌딩을 반쯤 태웠다…" : "예) 메이링 만두 8년 단골…";
-  refresh();
-}
+  /* 헤더 */
+  header{border:1px solid var(--line);background:
+    radial-gradient(120% 140% at 0% 0%,rgba(255,43,70,.08),transparent 55%),var(--panel);
+    padding:20px 20px 18px;position:relative;overflow:hidden}
+  header::before{content:"異 能 登 録";position:absolute;right:-6px;top:-14px;
+    font-family:'Black Han Sans';font-size:62px;color:rgba(22,239,198,.05);
+    letter-spacing:8px;white-space:nowrap}
+  .kick{font-family:'Noto Sans Mono';font-size:11px;letter-spacing:3px;
+    color:var(--neon);text-transform:uppercase}
+  h1{font-family:'Black Han Sans';font-size:clamp(30px,8vw,46px);margin:6px 0 4px;
+    color:var(--ink);text-shadow:var(--glow);position:relative}
+  h1 .red{color:var(--shrine);text-shadow:0 0 16px rgba(255,43,70,.45)}
+  .sub{color:var(--muted);font-size:13px;max-width:46ch}
+  .sub b{color:var(--amber);font-weight:700}
 
-function unlock(id){const s=document.getElementById(id);if(s)s.classList.remove('locked');}
-function lock(id){const s=document.getElementById(id);if(s)s.classList.add('locked');}
+  /* 스텝 카드 */
+  section{border:1px solid var(--line);background:var(--panel);margin-top:14px;
+    padding:18px 18px 20px;position:relative}
+  .step{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+  .num{font-family:'Black Han Sans';font-size:13px;color:var(--bg);
+    background:var(--neon);padding:1px 8px;letter-spacing:1px;box-shadow:var(--glow)}
+  .step h2{font-size:15px;margin:0;letter-spacing:.5px}
+  .step .ko{color:var(--muted);font-size:12px;font-weight:400}
+  section.locked{opacity:.4;filter:saturate(.4)}
+  section.locked::after{content:"先 단계 완료";position:absolute;inset:0;
+    display:grid;place-items:center;font-family:'Noto Sans Mono';font-size:12px;
+    color:var(--muted);letter-spacing:2px;background:rgba(8,11,10,.55)}
 
-function makeBadges(item,recText){
-  const badges=[];
-  if(item.rec) badges.push(`<span class="badge rec">▸ 추천 ${recText}</span>`);
-  if(item.hard) badges.push(`<span class="badge hard">HARD</span>`);
-  return `<div class="badgeRow">${badges.join('')}</div>`;
-}
+  /* 출신 카드 */
+  .picks{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:520px){.picks{grid-template-columns:1fr}}
+  .pick{border:1px solid var(--line);background:var(--panel2);padding:14px;
+    cursor:pointer;transition:.15s;position:relative}
+  .pick:hover{border-color:var(--neon);transform:translateY(-2px)}
+  .pick.on{border-color:var(--neon);box-shadow:var(--glow);background:#13201d}
+  .pick .tag{font-family:'Noto Sans Mono';font-size:10px;color:var(--copper);letter-spacing:2px}
+  .pick .t{font-family:'Black Han Sans';font-size:18px;margin:4px 0 6px}
+  .pick .d{font-size:12px;color:var(--muted);line-height:1.45}
+  .pick.on .t{color:var(--neon)}
 
-function buildFactions(){
-  const list=FACTIONS[STATE.origin]; const box=document.getElementById('facList'); box.innerHTML='';
-  list.forEach(f=>{
-    const d=document.createElement('div'); d.className='fac'; d.onclick=()=>pickFaction(d,f);
-    d.innerHTML=`${makeBadges(f,'ROUTE')}<div class="fn">${f.fn}</div><div class="fd">${f.fd}</div>`;
-    if(STATE.factionId===f.id) d.classList.add('on');
-    box.appendChild(d);
-  });
-}
+  label.fld{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;letter-spacing:.5px}
+  input[type=text],textarea{width:100%;background:#0b0f0e;color:var(--ink);
+    border:1px solid var(--line);padding:11px 12px;font-family:inherit;font-size:14px;
+    border-radius:0;outline:none}
+  input:focus,textarea:focus{border-color:var(--neon);box-shadow:0 0 0 1px var(--neon)}
+  textarea{resize:vertical;min-height:64px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 
-function pickFaction(el,f){
-  document.querySelectorAll('#facList .fac').forEach(p=>p.classList.remove('on'));
-  el.classList.add('on');
-  STATE.faction=f.fn; STATE.factionId=f.id; STATE.position=null; STATE.watts=null;
-  lock('s6'); lock('cardSec');
-  unlock('s5'); buildPositions(f.id); refresh();
-}
+  button{font-family:'Noto Sans KR';font-weight:700;cursor:pointer;border:none;
+    padding:11px 16px;font-size:13px;letter-spacing:.5px;border-radius:0;transition:.15s}
+  .btn{background:var(--neon);color:#04110d;box-shadow:var(--glow)}
+  .btn:hover{filter:brightness(1.12)}
+  .btn:disabled{background:var(--line);color:var(--muted);box-shadow:none;cursor:not-allowed}
+  .ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .ghost:hover{border-color:var(--neon);color:var(--neon)}
 
-function buildPositions(factionId){
-  const list=POSITIONS[factionId]; const box=document.getElementById('posList'); box.innerHTML='';
-  list.forEach(p=>{
-    const d=document.createElement('div'); d.className='fac'; d.onclick=()=>pickPosition(d,p);
-    d.innerHTML=`${makeBadges(p,'CLASS')}<div class="fn">${p.name}</div><div class="fd">${p.desc}</div>`;
-    if(STATE.position===p.name) d.classList.add('on');
-    box.appendChild(d);
-  });
-}
+  /* 보정 결과 */
+  .out{margin-top:14px;border:1px solid var(--line);background:#0b100e;padding:0}
+  .out .bar{display:flex;justify-content:space-between;align-items:center;
+    padding:9px 12px;border-bottom:1px solid var(--line);
+    font-family:'Noto Sans Mono';font-size:11px;letter-spacing:2px;color:var(--neon)}
+  .out .body{padding:14px}
+  .pname{font-family:'Black Han Sans';font-size:22px;color:var(--neon);text-shadow:var(--glow)}
+  .pdesc{font-size:14px;margin:6px 0 14px;color:var(--ink)}
+  .penalty{border-left:3px solid var(--amber);background:rgba(255,176,37,.06);
+    padding:9px 12px}
+  .penalty .lab{font-family:'Black Han Sans';color:var(--amber);font-size:13px;letter-spacing:2px}
+  .penalty .txt{font-size:13px;color:#ffd98a;margin-top:3px}
+  .loading{padding:18px;text-align:center;color:var(--muted);font-family:'Noto Sans Mono';font-size:12px}
+  .loading .blip{color:var(--neon);animation:blip 1s steps(4) infinite}
+  @keyframes blip{0%{opacity:.2}50%{opacity:1}100%{opacity:.2}}
+  .err{color:var(--shrine);font-size:12px;padding:10px 12px;border-left:3px solid var(--shrine);
+    background:rgba(255,43,70,.06);margin-top:10px}
 
-function pickPosition(el,pos){
-  document.querySelectorAll('#posList .fac').forEach(p=>p.classList.remove('on'));
-  el.classList.add('on');
-  STATE.position=pos.name; STATE.watts=null;
-  lock('cardSec'); unlock('s6'); refresh();
-}
+  .facs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media(max-width:520px){.facs{grid-template-columns:1fr}}
+  .fac{border:1px solid var(--line);background:var(--panel2);padding:11px 12px;cursor:pointer;transition:.15s;min-height:104px}
+  .fac:hover{border-color:var(--neon)}
+  .fac.on{border-color:var(--neon);box-shadow:var(--glow);background:#13201d}
+  .fac .badgeRow{min-height:18px;display:flex;gap:6px;align-items:center;margin-bottom:4px;flex-wrap:wrap}
+  .fac .badge{font-family:'Noto Sans Mono';font-size:9px;letter-spacing:1px;line-height:1}
+  .fac .badge.rec{color:var(--shrine)}
+  .fac .badge.hard{color:var(--amber);border:1px solid rgba(255,176,37,.45);background:rgba(255,176,37,.06);padding:3px 6px}
+  .fac .fn{font-weight:700;font-size:14px}
+  .fac.on .fn{color:var(--neon)}
+  .fac .fd{font-size:11px;color:var(--muted);margin-top:4px}
 
-function computeWatts(){
-  const num=Math.floor(Math.random()*25)+3;
-  const shell=pick(W_SHELLS);
-  const note=pick(W_NOTES);
-  STATE.watts=`${num}ᴡ · S:[${shell}]`;
-  document.getElementById('wOut').innerHTML=
-    `<div class="wbig">${num} ᴡ</div><div class="wdesc">현물 쉘 목록: <strong>${esc(shell)}</strong></div><div class="wsub">※ 단말기 분석: ${esc(note)}</div>`;
-  unlock('cardSec'); refresh();
-  document.getElementById('cardSec').scrollIntoView({behavior:'smooth',block:'start'});
-}
+  .profileGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .profileGrid .full{grid-column:1/-1}
+  @media(max-width:520px){.profileGrid{grid-template-columns:1fr}}
+  .miniNote{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.45}
+  .wbox{border:1px solid var(--line);background:#0b100e;margin-top:10px;padding:14px}
+  .wbox .wbig{font-family:'Black Han Sans';font-size:26px;color:var(--amber);text-shadow:0 0 14px rgba(255,176,37,.28)}
+  .wbox .wdesc{font-size:13px;color:var(--ink);margin-top:4px}
+  .wbox .wsub{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.45}
+  textarea.certEdit{width:100%;min-height:230px;white-space:pre-wrap;word-break:break-word;font-family:'Noto Sans Mono';
+    font-size:13px;background:#0b100e;border:1px dashed var(--copper);padding:16px;
+    color:var(--ink);margin:0;line-height:1.7;resize:vertical;outline:none}
+  textarea.certEdit:focus{border-color:var(--neon);box-shadow:0 0 0 1px rgba(22,239,198,.5)}
+  .idTools{border:1px solid var(--line);background:var(--panel2);padding:14px;margin-top:14px}
+  .fileline{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+  input[type=file]{width:100%;max-width:340px;color:var(--muted);font-size:12px}
+  .preview{margin-top:12px;border:1px solid var(--line);background:#0b100e;min-height:90px;display:grid;place-items:center;color:var(--muted);font-size:12px;overflow:hidden;position:relative}
+  .preview img{width:100%;display:block}
+  .preview.issuing{min-height:260px;border-color:var(--neon);box-shadow:0 0 28px rgba(22,239,198,.18)}
+  .issueFx{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;background:radial-gradient(80% 120% at 50% 30%,rgba(22,239,198,.12),rgba(8,11,10,.96));font-family:'Noto Sans Mono';letter-spacing:2px;color:var(--neon);text-align:center;z-index:2}
+  .issueFx::before{content:"";position:absolute;inset:-40%;background:linear-gradient(180deg,transparent 0%,rgba(22,239,198,.12) 48%,rgba(22,239,198,.55) 50%,rgba(22,239,198,.12) 52%,transparent 100%);animation:scanIssue 1.55s linear infinite}
+  .issueFx::after{content:"九龍\A직印";position:absolute;right:54px;bottom:44px;width:150px;height:150px;display:flex;align-items:center;justify-content:center;text-align:center;white-space:pre;line-height:.82;border:5px solid rgba(255,43,70,.82);color:rgba(255,43,70,.9);padding:0;font-family:'Black Han Sans';font-size:60px;letter-spacing:0;transform:rotate(-9deg) scale(.7);opacity:0;animation:stampIssue .62s ease-out .9s forwards;z-index:6;text-shadow:0 0 9px rgba(255,43,70,.26)}
+  .issueFx .txt{position:relative;z-index:1;font-weight:700;text-shadow:0 0 16px rgba(22,239,198,.55)}
+  .issueFx .subtxt{display:block;margin-top:8px;font-size:10px;color:var(--muted);letter-spacing:1px}
+  @keyframes scanIssue{from{transform:translateY(-35%)}to{transform:translateY(35%)}}
+  @keyframes stampIssue{0%{opacity:0;transform:rotate(-9deg) scale(1.28)}55%{opacity:1;transform:rotate(-9deg) scale(.58)}100%{opacity:.98;transform:rotate(-9deg) scale(.7)}}
 
-function rollWatts(){ computeWatts(); }
-function manualWatts(){
-  const shell=pick(W_SHELLS);
-  STATE.watts=`5w · S:[${shell}, 고철나사 약간]`;
-  document.getElementById('wOut').innerHTML=
-    `<div class="wbig">5 蓄電(ᴡ)</div><div class="wdesc">현물 쉘 목록: <strong>${esc(shell)}, 고철나사 약간</strong></div><div class="wsub">※ 하층 구역 고철장 및 쓰레기 매립지 정착 보증 수금액 기준.</div>`;
-  unlock('cardSec'); refresh();
-  document.getElementById('cardSec').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function rollPast(){
-  const list=PAST[STATE.origin]||[]; if(!list.length)return;
-  const val=pick(list); document.getElementById('pastIn').value=val;
-  updatePast(true);
-}
-
-function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
-
-const KOWLOON_POWER_TYPES = [
-  { type: "신경회로 과부하형", suffix: "오버클록" },
-  { type: "혈류 가속 폭제형", suffix: "서지" },
-  { type: "분자 위상 붕괴형", suffix: "인젝션" },
-  { type: "생체 전류 역류형", suffix: "인버전" },
-  { type: "세포 피로 분열형", suffix: "포매팅" }
-];
-
-const KOWLOON_POWER_EFFECTS = [
-  { name: "염동적 공간 압착", desc: "시선이 닿는 반경 1m의 공기 밀도를 순간적으로 압착하여 고체 수준의 투명한 물리 격벽을 형성합니다. 탄환을 튕겨내기에 제격입니다." },
-  { name: "생체 전자기 교란", desc: "자신을 중심으로 강력한 생체 EMP 전류를 방출하여 주변 하층민들의 불법 의체 센서와 통신 단말기를 일시적으로 마비시킵니다." },
-  { name: "근섬유 리미터 해제", desc: "아드레날린 분비를 강제로 폭발시켜 인간의 한계를 넘는 순간적인 완력과 도약력을 5배 이상 끌어올려 기계 의체와 맞서게 합니다." },
-  { name: "망막 사념 인젝션", desc: "시선이 마주친 타인의 시신경망에 불법 환각 패킷을 찔러 넣어, 몇 분 동안 지독한 공포와 지체 현상을 겪게 만듭니다." },
-  { name: "인과율 인지 지체", desc: "자신을 제외한 주변 3미터 공간의 타임라인을 순간적으로 '렉 걸린 것처럼' 0.5초간 동결시켜 완벽한 선공권을 쥡니다." },
-  { name: "생체 세포 가역 변형", desc: "순간적으로 자신의 신체 일부를 연성 고철 수준으로 경화시키거나 점성을 주어 물리적 충격을 흡수하고 무기를 막아냅니다." }
-];
-
-const KOWLOON_BODY_PARTS = [
-  { part: "전두엽 대뇌피질", symptom: "뇌수가 끓는 듯한 전반적인 뇌압 상승과 극심한 편두통, 순간적인 전신 마비" },
-  { part: "안구 시신경 다발", symptom: "시신경 과열로 인한 안구 내 모세혈관 동시 파열, 혈루(피눈물) 배출 및 일시적 안구 실명" },
-  { part: "심장 근육 및 판막", symptom: "강제 불규칙 박동 반동으로 인한 흉부 압박감, 호흡 곤란 및 수초 간의 인위적 심정지 위험" },
-  { part: "요추 중추 신경망", symptom: "척추 부위의 영적 방사능 급증으로 인한 극심한 척수 통증 및 하반신 감각의 일시적 소실" },
-  { part: "폐 순환계 및 이비인후", symptom: "폐포 파열로 인한 폐 내부 역류 현상, 심각한 객혈(피가래)과 이명으로 인한 평형감각 상실" }
-];
-
-const KOWLOON_BACKLASH_TAILS = [
-  "능력 종료 직후 최소 반나절 동안 손가락 하나 까딱할 수 없는 영구적 나태·무기력 상태에 고정됩니다.",
-  "뇌 신경 오염의 대가로 심각한 단기 기억장애가 발생하여, 직전 상황이나 자신의 이름조차 수분간 완전히 망각합니다.",
-  "언어 중추 신경 교란으로 인해 몇 시간 동안 기괴한 환청을 겪으며, 타인과 대화 시 실어증이나 웅얼거림 증세가 동반됩니다.",
-  "생체 에너지가 바닥나 미각과 후각 필터가 마비되며, 입안 가득 비릿한 생피 냄새와 타버린 전선 탄내만 맴돕니다.",
-  "의체 보행 센서와 생체 신호가 동기화 오류를 일으켜 전신에서 기분 나쁜 기계 마찰음이 터지고 반사신경이 극도로 저하됩니다."
-];
-
-const KOWLOON_KEYWORDS = {
-  "불": { name: "화합물 발화 흔적", desc: "구룡 골목에 자욱한 인공 가스 및 공업 오일 성분을 영적으로 간섭하여 지독한 플라스틱 탄내를 풍기는 네온빛 화염을 일으킵니다." },
-  "시간": { name: "지체된 프레임 드롭", desc: "자신 주변의 인지 타임라인을 순간적으로 조작하여 상대방의 공격 궤적을 느리게 관찰하고 회피할 틈을 벌어냅니다." },
-  "기억": { name: "신경망 가짜 패킷 주입", desc: "타인의 전두엽에 동기화 오류를 일으켜 불과 5분 전에 자신과 했던 약속이나 거래 대금을 조작하여 혼란을 줍니다." }
-};
-
-const NON_POWER_RULES=[
-  {name:"구라협상",desc:"능력은 없지만 말빨로 통행세와 목숨값을 깎는다",backlash:"상대가 안 넘어가면 두 배로 맞거나 두 배로 낸다"},
-  {name:"골목눈치",desc:"표정·발소리·가격표 뒤의 살기를 재빨리 읽는다",backlash:"과신하면 CCTV보다 먼저 사기당한다"},
-  {name:"장부암기",desc:"빚·외상·통행세 숫자를 미친 듯이 기억한다",backlash:"숫자 하나 틀리면 구룡식 회계감사가 온다"},
-  {name:"고철장비",desc:"중고 EMP 스틱과 깡통무전기로 작은 틈을 만든다",backlash:"배터리 떨어지면 그냥 무거운 쓰레기다"},
-  {name:"불법드론",desc:"손바닥 드론 하나로 정찰·녹화·소액배달을 한다",backlash:"노이즈 심하면 주인 머리 위에서 자폭한다"},
-  {name:"충격장갑",desc:"낡은 전기장갑으로 가까운 적을 찌릿하게 물린다",backlash:"비 오는 날엔 본인이 더 많이 감전된다"},
-  {name:"가짜신분칩",desc:"싸구려 신분칩으로 검문 단말을 잠깐 속인다",backlash:"칩이 삑나면 이름이 '체납자'로 출력된다"},
-  {name:"만능공구",desc:"녹슨 멀티툴로 자물쇠·배관·의체나사를 억지로 건드린다",backlash:"절반은 고치고 절반은 더 망가뜨린다"}
-];
-
-function randomPower(){
-  const t = pick(KOWLOON_POWER_TYPES);
-  const e = pick(KOWLOON_POWER_EFFECTS);
-  const b = pick(KOWLOON_BODY_PARTS);
-  const tail = pick(KOWLOON_BACKLASH_TAILS);
-
-  const finalName = `${t.type}: ${e.name} (${t.suffix})`;
-  const finalBacklash = `[${b.part} 과부하] ${b.symptom}. ${tail}`;
-
-  STATE.power = `${finalName} — ${e.desc}`;
-  STATE.backlash = finalBacklash;
-
-  document.getElementById('powerOut').innerHTML =
-    `<div class="out"><div class="bar"><span>異能 LOCAL</span><span>무작위 오염 등록</span></div>
-     <div class="body"><div class="pname">${esc(finalName)}</div>
-     <div class="pdesc">${esc(e.desc)}</div>
-     <div class="penalty"><div class="lab">罰 · 반작용</div>
-     <div class="txt">${esc(finalBacklash)}</div></div></div></div>`;
-  unlock('s3'); refresh();
-}
-
-function noPower(){
-  const obj=pick(NON_POWER_RULES);
-  STATE.power=`무능력자/${obj.name} — ${obj.desc}`;
-  STATE.backlash=obj.backlash;
-  document.getElementById('powerOut').innerHTML=
-    `<div class="out"><div class="bar"><span>非能 LOCAL</span><span>생존기 등록</span></div>
-     <div class="body"><div class="pname">${esc(obj.name)}</div>
-     <div class="pdesc">${esc(obj.desc)}</div>
-     <div class="penalty"><div class="lab">弱點 · 대가</div>
-     <div class="txt">${esc(obj.backlash)}</div></div></div></div>`;
-  unlock('s3'); refresh();
-}
-
-function refinePower(){
-  const input=document.getElementById('powerIn').value.trim();
-  const out=document.getElementById('powerOut');
-  if(!input){out.innerHTML='<div class="err">능력을 먼저 적으세요. 빈칸은 무능력자 버튼으로.</div>';return;}
-  const btn=document.getElementById('refineBtn'); btn.disabled=true;
-  out.innerHTML='<div class="out"><div class="loading">단말이 신체 오염도를 측정 중<span class="blip"> ▮▮▮▮</span></div></div>';
-
-  setTimeout(()=>{
-    let matchedEffect = null;
-    for(let key in KOWLOON_KEYWORDS) {
-      if(input.includes(key)) {
-        matchedEffect = KOWLOON_KEYWORDS[key];
-        break;
-      }
-    }
-    if(!matchedEffect) {
-      matchedEffect = {
-        name: `변칙 변형형 [${input}]`,
-        desc: `단말이 당신이 입력한 [${input}] 능력을 구룡섹터의 전자기 노이즈 환경에 맞춰 강제로 변조한 결과물입니다.`
-      };
-    }
-
-    const t = pick(KOWLOON_POWER_TYPES);
-    const b = pick(KOWLOON_BODY_PARTS);
-    const tail = pick(KOWLOON_BACKLASH_TAILS);
-
-    const finalName = `${t.type}: ${matchedEffect.name}`;
-    const finalBacklash = `[${b.part} 과부하] ${b.symptom}. ${tail}`;
-
-    STATE.power=`${finalName} — ${matchedEffect.desc}`;
-    STATE.backlash=finalBacklash;
-    out.innerHTML=
-      `<div class="out"><div class="bar"><span>異能 LOCAL</span><span>오프라인 오염 등록</span></div>
-       <div class="body"><div class="pname">${esc(finalName)}</div>
-       <div class="pdesc">${esc(matchedEffect.desc)}</div>
-       <div class="penalty"><div class="lab">罰 · 반작용</div>
-       <div class="txt">${esc(finalBacklash)}</div></div></div></div>`;
-    unlock('s3'); refresh(); btn.disabled=false;
-  }, 450);
-}
-
-function esc(s){return (s||"").replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
-
-function updatePast(force=false){
-  const inp=document.getElementById('pastIn');
-  STATE.past=inp.value.trim();
-  if(STATE.past){
-    unlock('s4');
-    refresh();
-    if(force) document.getElementById('s4').scrollIntoView({behavior:'smooth',block:'start'});
-    return true;
-  }
-  if(force){
-    alert('한 줄 과거를 입력하거나 [과거 굴리고 진행]을 눌러주세요.');
-    inp.focus();
-  }
-  refresh();
-  return false;
-}
-
-document.getElementById('pastIn').addEventListener('input',()=>updatePast());
-document.getElementById('pastIn').addEventListener('change',()=>updatePast());
-document.getElementById('pastIn').addEventListener('blur',()=>updatePast());
-
-function buildCertPlain(){
-  const lines=[
-    `[ⓤ 설정]`,
-    `名:${STATE.name||''} / 外:${getAppearanceLine()}`,
-    `出:${ORIGIN_LABEL[STATE.origin]||''} / 過:${STATE.past||''}`,
-    `能:${getPowerTitle()} / 罰:${STATE.backlash||''}`,
-    `勢:${STATE.faction||''} / 位:${getPositionTitle()}`,
-    `所:${STATE.watts||''}`
-  ];
-  return lines.join('\n');
-}
-function setCertValue(txt){ document.getElementById('certBox').innerText=txt; }
-function refresh(){ if(document.getElementById('cardSec').classList.contains('locked')) buildCertPlain(); else updateCertificate(); }
-function updateCertificate(){ const txt=buildCertPlain(); setCertValue(txt); }
-function resetCertToGenerated(){ updateCertificate(); }
-
-function copyCert(){
-  const box=document.getElementById('certBox');
-  const t=box.innerText||box.textContent;
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(t).then(()=>showToast()).catch(()=>{fallbackCopy(t);});
-  }else{
-    fallbackCopy(t);
-  }
-}
-function fallbackCopy(t){
-  const ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
-  document.body.appendChild(ta); ta.focus(); ta.select();
-  try{document.execCommand('copy'); showToast();}catch(e){alert('복사 실패. 직접 드래그해서 복사해주세요.');}
-  document.body.removeChild(ta);
-}
-function showToast(){
-  const toast=document.getElementById('toast'); toast.classList.add('show');
-  setTimeout(()=>{toast.classList.remove('show');},2000);
-}
-
-function loadProfilePhoto(ev){
-  const f=ev.target.files[0]; if(!f)return;
-  const reader=new FileReader(); reader.onload=function(e){
-    STATE.photoData=e.target.result;
-    const img=document.getElementById('photoPrev'); img.src=e.target.result; img.style.display='block';
-    refresh();
-  };
-  reader.readAsDataURL(f);
-}
-function clearProfilePhoto(){
-  STATE.photoData=null;
-  const img=document.getElementById('photoPrev'); img.src=''; img.style.display='none';
-  document.getElementById('photoFile').value='';
-  refresh();
-}
-
-function wrapCanvasText(ctx,text,x,y,maxWidth,lineHeight,maxLines){
-  const words=(text||'').split(''); let line=''; let lineCount=0;
-  for(let n=0; n<words.length; n++){
-    let testLine=line+words[n]; let metrics=ctx.measureText(testLine);
-    if(metrics.width>maxWidth && n>0){
-      ctx.fillText(line,x,y); line=words[n]; y+=lineHeight; lineCount++;
-      if(maxLines&&lineCount>=maxLines){if(n<words.length-1){ctx.fillText('...',x,y);} return y;}
-    }else{
-      line=testLine;
-    }
-  }
-  ctx.fillText(line,x,y); return y;
-}
-function drawCoverImage(ctx,img,x,y,w,h){
-  const imgW=img.naturalWidth||img.width; const imgH=img.naturalHeight||img.height;
-  const imgRatio=imgW/imgH; const canvasRatio=w/h;
-  let sx,sy,sw,sh;
-  if(imgRatio>canvasRatio){ sh=imgH; sw=sh*canvasRatio; sx=(imgW-sw)/2; sy=0; }
-  else{ sw=imgW; sh=sw/canvasRatio; sx=0; sy=(imgH-sh)/2; }
-  ctx.drawImage(img,sx,sy,sw,sh,x,y,w,h);
-}
-function loadImage(src){
-  return new Promise((res,rej)=>{
-    const img=new Image(); img.crossOrigin='anonymous';
-    img.onload=()=>res(img); img.onerror=()=>rej(new Error('image load fail'));
-    img.src=src;
-  });
-}
-
-function getPowerTitle(){
-  if(!STATE.power) return '';
-  return STATE.power.split(' — ')[0]||'';
-}
-function getPositionTitle(){ return STATE.position||''; }
-function getAppearanceLine(){ return `${STATE.height?STATE.height+'cm':''} · ${STATE.features||''}`; }
-
-function fitCanvasText(ctx,text,x,y,maxWidth){
-  let origSize=parseInt(ctx.font); let currentSize=origSize;
-  while(ctx.measureText(text).width>maxWidth && currentSize>8){
-    currentSize--; ctx.font=ctx.font.replace(origSize+'px', currentSize+'px'); origSize=currentSize;
-  }
-  ctx.fillText(text,x,y);
-}
-
-function drawKowloonSeal(ctx,cx,cy,size){
-  ctx.save(); ctx.strokeStyle='rgba(255,43,70,.85)'; ctx.lineWidth=3;
-  ctx.strokeRect(cx-size/2, cy-size/2, size, size);
-  ctx.strokeRect(cx-size/2+5, cy-size/2+5, size-10, size-10);
-  ctx.fillStyle='rgba(255,43,70,.85)'; ctx.font='900 18px "Noto Sans KR"'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('九龍城寨', cx, cy-size/4+3); ctx.fillText('出入許可', cx, cy+size/4-3);
-  ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(cx-size/2+10, cy); ctx.lineTo(cx+size/2-10, cy); ctx.stroke();
-  ctx.restore();
-}
-
-function applyCardNoise(ctx,W,H){
-  const imgData=ctx.getImageData(0,0,W,H); const data=imgData.data;
-  for(let i=0; i<data.length; i+=4){
-    const noise=(Math.random()-.5)*18;
-    data[i]=Math.min(255,Math.max(0,data[i]+noise));
-    data[i+1]=Math.min(255,Math.max(0,data[i+1]+noise));
-    data[i+2]=Math.min(255,Math.max(0,data[i+2]+noise));
-  }
-  ctx.putImageData(imgData,0,0);
-}
-
-async function showIssueEffect(){
-  const canvas=document.getElementById('idCanvas'); const ctx=canvas.getContext('2d');
-  const W=canvas.width; const H=canvas.height; document.getElementById('canvasZone').style.display='block';
-  document.getElementById('canvasZone').scrollIntoView({behavior:'smooth',block:'end'});
-  for(let i=0; i<4; i++){
-    ctx.fillStyle='#16efc6'; ctx.fillRect(0,0,W,H); await sleep(40);
-    ctx.fillStyle='#ff2b46'; ctx.fillRect(0,0,W,H); await sleep(40);
-    ctx.fillStyle='#080b0a'; ctx.fillRect(0,0,W,H); await sleep(40);
-  }
-}
-function sleep(ms){return new Promise(res=>setTimeout(res,ms));}
-
-async function renderIdCard(){
-  const canvas=document.getElementById('idCanvas'); const ctx=canvas.getContext('2d');
-  const W=canvas.width; const H=canvas.height;
-  ctx.fillStyle='#0c1110'; ctx.fillRect(0,0,W,H);
-  ctx.strokeStyle='#1e2926'; ctx.lineWidth=2; ctx.strokeRect(15,15,W-30,H-30);
-  ctx.strokeStyle='rgba(22,239,198,.4)'; ctx.lineWidth=1; ctx.strokeRect(22,22,W-44,H-44);
-
-  ctx.fillStyle='rgba(22,239,198,.02)'; ctx.fillRect(22,22,W-44,H-44);
-  ctx.fillStyle='#16efc6'; ctx.shadowColor='#16efc6'; ctx.shadowBlur=8; ctx.font='900 24px "Noto Sans KR"';
-  ctx.fillText('九龍特別行政區 ｜ 居住地 入住登령證', 52, 65); ctx.shadowBlur=0;
-  ctx.fillStyle='#6f877d'; ctx.font='700 11px "Noto Sans Mono"'; ctx.fillText('KOWLOON RESIDENCE PERMIT // PROTOCOL UNBOUNDED', 52, 88);
-  ctx.fillStyle='rgba(38,50,45,.8)'; ctx.fillRect(52,102,896,1);
-
-  const slotX=52; const slotY=125; const slotW=220; const slotH=275;
-  ctx.fillStyle='#111715'; ctx.fillRect(slotX,slotY,slotW,slotH);
-  ctx.strokeStyle='#26322d'; ctx.lineWidth=2; ctx.strokeRect(slotX,slotY,slotW,slotH);
-  if(STATE.photoData){
-    try{ const userImg=await loadImage(STATE.photoData); drawCoverImage(ctx,userImg,slotX+4,slotY+4,slotW-8,slotH-8); }
-    catch(e){ ctx.fillStyle='#ff2b46'; ctx.font='12px "Noto Sans KR"'; ctx.fillText('의체사진 로드 에러', slotX+20, slotY+130); }
-  }else{
-    ctx.strokeStyle='rgba(111,135,125,.3)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(slotX,slotY); ctx.lineTo(slotX+slotW,slotY+slotH); ctx.moveTo(slotX+slotW,slotY); ctx.lineTo(slotX,slotY+slotH); ctx.stroke();
-    ctx.fillStyle='#6f877d'; ctx.font='900 12px "Noto Sans KR"'; ctx.textAlign='center'; ctx.fillText('의체 이미지 미등록', slotX+slotW/2, slotY+slotH/2); ctx.textAlign='left';
-  }
-
-  const infoX=305; let infoY=152; const labelStyle='#6f877d'; const valStyle='#d6e7df';
-  const dataRows=[
-    {l:'NAME / 가명', v:STATE.name||'미등록'},
-    {l:'BODY / 신체', v:getAppearanceLine()||'미등록'},
-    {l:'ORIGIN / 출신', v:ORIGIN_LABEL[STATE.origin]||'미등록'},
-    {l:'PAST / 과거', v:STATE.past||'미등록'},
-    {l:'POWER / 이능력', v:getPowerTitle()||'순수 무능력자'},
-    {l:'FACTION / 세력', v:STATE.faction||'미소속 부랑자'},
-    {l:'WATT / 보유소지', v:STATE.watts||'0 w'}
-  ];
-  dataRows.forEach(r=>{
-    ctx.fillStyle=labelStyle; ctx.font='900 12px "Noto Sans KR"'; ctx.fillText(r.l, infoX, infoY);
-    ctx.fillStyle=valStyle; ctx.font='700 16px "Noto Sans KR"';
-    if(r.l==='PAST / 과거'){ wrapCanvasText(ctx,r.v, infoX+125, infoY, 520, 22, 1); }
-    else if(r.l==='POWER / 이능력'){ fitCanvasText(ctx,r.v, infoX+125, infoY, 340); }
-    else{ fitCanvasText(ctx,r.v, infoX+125, infoY, 520); }
-    infoY+=37;
-  });
-
-  const bsecX=52; const bsecY=425; const bsecW=712; const bsecH=125;
-  ctx.fillStyle='#0f1412'; ctx.fillRect(bsecX,bsecY,bsecW,bsecH);
-  ctx.strokeStyle='#26322d'; ctx.lineWidth=1; ctx.strokeRect(bsecX,bsecY,bsecW,bsecH);
-  ctx.fillStyle='#ff2b46'; ctx.font='900 11px "Noto Sans KR"'; ctx.fillText('신체 오염 반작용(罰) 선고 리스크 메타 서술', bsecX+15, bsecY+24);
-  ctx.fillStyle='#fca5a5'; ctx.font='500 13px "Noto Sans KR"';
-  wrapCanvasText(ctx, STATE.backlash||'무능력자는 고유 오염 리스크가 없으나, 배터리 소진 시 시스템이 정지되어 척추가 담보로 전환될 수 있습니다.', bsecX+15, bsecY+48, bsecW-30, 20, 3);
-
-  const noteX=52; const noteY=492; const noteW=712; const noteH=55;
-  ctx.strokeStyle='rgba(22,239,198,.82)'; ctx.strokeRect(noteX,noteY,noteW,noteH);
-  ctx.fillStyle='#16efc6'; ctx.font='900 18px "Noto Sans KR"'; ctx.fillText('NOTICE',392,504);
-  ctx.fillStyle='#d6e7df'; ctx.font='700 15px "Noto Sans KR"';
-  ctx.fillText('외부 메가크레딧 무효 · 짝퉁칩 주의 · 위조칩 적발 시 척추담보 전환',392,530);
-
-  ctx.fillStyle='#6f877d'; ctx.font='11px "Noto Sans KR"';
-  ctx.fillText('※ 발급기관은 책임지지 않음 · 사진/기재정보 위조 시 골목 재판으로 이관',72,565);
-  ctx.fillStyle='rgba(22,239,198,.6)'; ctx.fillRect(70,576,860,1);
-
-  applyCardNoise(ctx,W,H);
-  drawKowloonSeal(ctx,805,356,182);
-  return canvas.toDataURL('image/png');
-}
-async function issueIdCard(){
-  if(!STATE.name||!STATE.height||!STATE.features){alert('먼저 이름, 키, 특징을 모두 기정사실로 등록해 주십시오.');return;}
-  const url=await renderIdCard();
-  const a=document.createElement('a');
-  const safe=(STATE.name||'kowloon').replace(/[\\/:*?"<>|\s]+/g,'_');
-  a.href=url; a.download=`kowloon_id_${safe}.png`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
-}
-async function previewIdCard(){
-  if(!STATE.name||!STATE.height||!STATE.features){alert('이름, 키, 특징을 먼저 모두 입력하셔야 단말기가 인쇄를 시작합니다.');return;}
-  await showIssueEffect(); await renderIdCard();
-}
-async function downloadIdCard(){
-  if(!STATE.name||!STATE.height||!STATE.features){alert('기정사실 정보 인지 불가능. 저장에 실패했습니다.');return;}
-  const url=await renderIdCard();
-  const a=document.createElement('a');
-  const safe=(STATE.name||'kowloon').replace(/[\\/:*?"<>|\s]+/g,'_');
-  a.href=url; a.download=`kowloon_id_${safe}.png`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
-}
-</script>
+  /* 등록증 */
+  #cardSec{border-color:var(--neon);
